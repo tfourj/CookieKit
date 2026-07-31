@@ -62,6 +62,25 @@ function compareCookies(left, right) {
     return left.index - right.index;
 }
 
+function compareDisplayCookies(left, right) {
+    const nameComparison = compareStrings(left.name, right.name);
+    if (nameComparison !== 0) {
+        return nameComparison;
+    }
+
+    const domainComparison = compareStrings(left.domain, right.domain);
+    if (domainComparison !== 0) {
+        return domainComparison;
+    }
+
+    const pathComparison = compareStrings(left.path, right.path);
+    if (pathComparison !== 0) {
+        return pathComparison;
+    }
+
+    return left.index - right.index;
+}
+
 function serializeCookie(cookie) {
     const rawDomain = stringField(cookie.domain);
     const path = stringField(cookie.path) || "/";
@@ -137,6 +156,21 @@ export function createNetscapeExport(cookies, hostname, generatedAt = new Date()
         exportedCount: lines.length,
         omittedCount
     };
+}
+
+export function createCookieDisplayRows(cookies) {
+    if (!Array.isArray(cookies)) {
+        return [];
+    }
+
+    return cookies
+        .filter((cookie) => cookie && typeof cookie === "object")
+        .map(sortableCookie)
+        .sort(compareDisplayCookies)
+        .map(({cookie}) => ({
+            key: stringField(cookie.name),
+            value: stringField(cookie.value)
+        }));
 }
 
 export function selectCookieStore(stores, tabId) {

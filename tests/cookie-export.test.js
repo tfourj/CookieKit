@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+    createCookieDisplayRows,
     createNetscapeExport,
     selectCookieStore
 } from "../CookieKit Extension/Resources/cookie-export.js";
@@ -202,4 +203,35 @@ test("does not fall back when no cookie store contains the active tab", () => {
     assert.equal(selectCookieStore(stores, 99), null);
     assert.equal(selectCookieStore(undefined, 99), null);
     assert.equal(selectCookieStore(stores, undefined), null);
+});
+
+test("creates deterministic key and value rows for the cookie viewer", () => {
+    const rows = createCookieDisplayRows([
+        {
+            domain: "example.com",
+            name: "theme",
+            path: "/",
+            value: "warm"
+        },
+        {
+            domain: "example.com",
+            name: "session",
+            path: "/account",
+            value: "<script>not markup</script>"
+        },
+        {
+            domain: "example.com",
+            name: "session",
+            path: "/",
+            value: "root-session"
+        },
+        null
+    ]);
+
+    assert.deepEqual(rows, [
+        {key: "session", value: "root-session"},
+        {key: "session", value: "<script>not markup</script>"},
+        {key: "theme", value: "warm"}
+    ]);
+    assert.deepEqual(createCookieDisplayRows(undefined), []);
 });
