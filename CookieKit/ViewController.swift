@@ -119,19 +119,15 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         SFSafariExtensionManager.getStateOfExtension(
             withIdentifier: extensionBundleIdentifier
         ) { [weak self] state, _ in
-            Task { @MainActor in
-                guard let self else {
-                    return
-                }
+            let status: String
+            if let state {
+                status = state.isEnabled ? "enabled" : "disabled"
+            } else {
+                status = "unknown"
+            }
 
-                let status: String
-                if let state {
-                    status = state.isEnabled ? "enabled" : "disabled"
-                } else {
-                    status = "unknown"
-                }
-
-                self.updateWebExtensionState(
+            DispatchQueue.main.async { [weak self] in
+                self?.updateWebExtensionState(
                     state: status,
                     canOpenSettings: true
                 )
