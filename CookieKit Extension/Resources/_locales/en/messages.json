@@ -1,10 +1,144 @@
 {
     "extension_name": {
-        "message": "CookieKit Extension",
+        "message": "CookieKit",
         "description": "The display name for the extension."
     },
     "extension_description": {
-        "message": "This is CookieKit Extension. You should tell us what your extension does here.",
+        "message": "Export cookies for the current Safari page in Netscape cookies.txt format.",
         "description": "Description of what the extension does."
+    },
+    "popup_title": {
+        "message": "Export cookies",
+        "description": "Popup heading."
+    },
+    "popup_subtitle": {
+        "message": "Netscape cookies.txt",
+        "description": "Popup format label."
+    },
+    "security_warning": {
+        "message": "Cookies can grant access to your accounts. Share this file only with destinations you trust.",
+        "description": "Warning shown before cookies can be exported."
+    },
+    "loading_title": {
+        "message": "Reading this page’s cookies…",
+        "description": "Status while cookies are being read."
+    },
+    "loading_body": {
+        "message": "CookieKit keeps them in memory only.",
+        "description": "Privacy detail shown while loading."
+    },
+    "ready_title": {
+        "message": "$COUNT$ cookies ready",
+        "description": "Status after cookies have been serialized.",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "ready_title_one": {
+        "message": "1 cookie ready",
+        "description": "Singular status after one cookie has been serialized."
+    },
+    "ready_body": {
+        "message": "From $HOST$",
+        "description": "Host whose cookies will be exported.",
+        "placeholders": {
+            "host": {
+                "content": "$1",
+                "example": "example.com"
+            }
+        }
+    },
+    "omitted_warning": {
+        "message": "$COUNT$ malformed cookies omitted",
+        "description": "Number of malformed cookies excluded from the export.",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "omitted_warning_one": {
+        "message": "1 malformed cookie omitted",
+        "description": "Singular malformed-cookie warning."
+    },
+    "share_button": {
+        "message": "Share file",
+        "description": "Primary export action."
+    },
+    "copy_button": {
+        "message": "Copy contents",
+        "description": "Secondary export action."
+    },
+    "copied_button": {
+        "message": "Copied",
+        "description": "Temporary confirmation after copying."
+    },
+    "empty_title": {
+        "message": "No cookies found",
+        "description": "Status when the current page has no visible cookies."
+    },
+    "empty_body": {
+        "message": "Safari did not return any cookies for this page.",
+        "description": "Explanation when no cookies were found."
+    },
+    "permission_title": {
+        "message": "Access is needed",
+        "description": "Status when Safari denies cookie or site access."
+    },
+    "permission_body": {
+        "message": "Allow CookieKit access to this website in Safari, then try again.",
+        "description": "Instructions after a permission denial."
+    },
+    "unsupported_title": {
+        "message": "This page cannot be exported",
+        "description": "Status for Safari pages and other unsupported URLs."
+    },
+    "unsupported_body": {
+        "message": "Open a regular http or https webpage and try again.",
+        "description": "Instructions for unsupported URLs."
+    },
+    "tab_error_title": {
+        "message": "Current page unavailable",
+        "description": "Status when Safari does not return an active tab."
+    },
+    "tab_error_body": {
+        "message": "Close this popup, return to the page, and try again.",
+        "description": "Instructions when the active tab cannot be read."
+    },
+    "cookie_error_title": {
+        "message": "Cookies could not be read",
+        "description": "Status for unexpected cookie API failures."
+    },
+    "cookie_error_body": {
+        "message": "Check CookieKit’s Safari permissions and try again.",
+        "description": "Instructions for unexpected cookie API failures."
+    },
+    "share_unavailable_title": {
+        "message": "File sharing is unavailable",
+        "description": "Status when the system cannot share the export as a file."
+    },
+    "share_unavailable_body": {
+        "message": "Use Copy contents instead.",
+        "description": "Fallback when sharing is unsupported."
+    },
+    "share_failed_title": {
+        "message": "The file could not be shared",
+        "description": "Status after a sharing error."
+    },
+    "share_failed_body": {
+        "message": "Try again or use Copy contents.",
+        "description": "Fallback after a sharing error."
+    },
+    "copy_failed_title": {
+        "message": "The export could not be copied",
+        "description": "Status after a clipboard error."
+    },
+    "copy_failed_body": {
+        "message": "Check Safari’s permissions and try again.",
+        "description": "Instructions after a clipboard error."
     }
 }
