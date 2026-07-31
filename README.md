@@ -27,8 +27,9 @@ CookieKit's access at any time.
 1. Open a regular HTTP or HTTPS webpage in Safari.
 2. Open Safari's page menu and select CookieKit.
 3. Review the website and number of cookies found.
-4. Select **Share file** to create a `.txt` file or **Copy contents** to copy the
-   export to the clipboard.
+4. Select **Show cookies** to inspect cookie keys and values in the popup,
+   **Share file** to create a `.txt` file, or **Copy contents** to copy the export
+   to the clipboard.
 
 CookieKit exports only cookies that apply to the current page and its active
 Safari profile or private-browsing store.
@@ -53,8 +54,9 @@ The Netscape format cannot preserve SameSite attributes or partition keys.
 
 ## Privacy and security
 
-Cookies are processed in memory only. CookieKit does not save them, transmit them
-to the developer, or display their names and values in the extension popup.
+Cookies are processed in memory only. CookieKit does not save them or transmit
+them to the developer. Cookie names and values appear only after you select
+**Show cookies**, and the on-screen table is discarded when the popup closes.
 
 Cookie data leaves CookieKit only when you explicitly share the file or copy its
 contents. The selected app, recipient, or clipboard consumer may then store that

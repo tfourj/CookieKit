@@ -9,8 +9,9 @@ CookieKit does not collect, store, sell, or transmit personal data.
 When a user explicitly opens the CookieKit Safari extension, the extension asks
 Safari for the cookies that apply to the current HTTP or HTTPS page. CookieKit
 formats those cookies in Netscape `cookies.txt` format in the extension popup's
-memory. It does not persist the cookies in app storage, extension storage, logs,
-analytics, or a developer-controlled server.
+memory. If the user chooses **Show cookies**, the popup also displays cookie names
+and values in a local table. It does not persist the cookies in app storage,
+extension storage, logs, analytics, or a developer-controlled server.
 
 CookieKit does not run a content script or background process on webpages.
 
@@ -26,6 +27,13 @@ CookieKit has:
 
 The containing app and Safari extension declare no collected data types, tracking
 domains, or required-reason API use in their Apple privacy manifests.
+
+## On-screen cookie viewer
+
+**Show cookies** reveals cookie names and values only inside the open extension
+popup. The table is hidden by default, is not transmitted anywhere, and is
+discarded when the popup closes. Anyone who can see the screen or a screenshot
+may be able to read the displayed values.
 
 ## User-selected exports
 
