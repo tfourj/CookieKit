@@ -15,8 +15,8 @@ function isSafeField(value) {
     return !UNSAFE_FIELD_CHARACTERS.test(value);
 }
 
-function expirationField(expirationDate) {
-    if (!Number.isFinite(expirationDate) || expirationDate <= 0) {
+function expirationField(expirationDate, isSession) {
+    if (isSession || !Number.isFinite(expirationDate) || expirationDate <= 0) {
         return "0";
     }
 
@@ -78,7 +78,7 @@ function serializeCookie(cookie) {
         cookie.hostOnly ? "FALSE" : "TRUE",
         path,
         cookie.secure ? "TRUE" : "FALSE",
-        expirationField(cookie.expirationDate),
+        expirationField(cookie.expirationDate, cookie.session),
         name,
         value
     ];
