@@ -1,11 +1,87 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CookieKit</title>
     <link rel="stylesheet" href="popup.css">
     <script type="module" src="popup.js"></script>
 </head>
 <body>
-    <strong>Hello World!</strong>
+    <main>
+        <header class="header">
+            <img
+                class="app-icon"
+                src="images/icon-64.png"
+                width="48"
+                height="48"
+                alt=""
+            >
+            <div>
+                <h1 data-i18n="popup_title">Export cookies</h1>
+                <p class="subtitle" data-i18n="popup_subtitle">Netscape cookies.txt</p>
+            </div>
+        </header>
+
+        <aside class="warning" role="note">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+                <path
+                    d="M12 3.5 21 20H3L12 3.5Zm0 5.5v5.5m0 3v.1"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                />
+            </svg>
+            <p data-i18n="security_warning">
+                Cookies can grant access to your accounts. Share this file only with
+                destinations you trust.
+            </p>
+        </aside>
+
+        <section id="status" class="status-card" data-state="loading" aria-live="polite">
+            <span class="status-indicator" aria-hidden="true"></span>
+            <div>
+                <h2 id="status-title" data-i18n="loading_title">
+                    Reading this page’s cookies…
+                </h2>
+                <p id="status-body" data-i18n="loading_body">
+                    CookieKit keeps them in memory only.
+                </p>
+                <p id="omitted-warning" class="omitted-warning" hidden></p>
+            </div>
+        </section>
+
+        <div class="actions">
+            <button id="share-button" class="primary" type="button" disabled>
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+                        d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 13v6.5h14V13"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                    />
+                </svg>
+                <span data-i18n="share_button">Share file</span>
+            </button>
+            <button id="copy-button" class="secondary" type="button" disabled>
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+                        d="M8 8V4h12v12h-4M4 8h12v12H4V8Z"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                    />
+                </svg>
+                <span id="copy-label" data-i18n="copy_button">Copy contents</span>
+            </button>
+        </div>
+
+        <p id="action-notice" class="action-notice" role="status" hidden></p>
+    </main>
 </body>
 </html>
