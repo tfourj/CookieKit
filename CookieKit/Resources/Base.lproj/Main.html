@@ -1,15 +1,132 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <meta charset="UTF-8">
+    <meta
+        http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self'; script-src 'self'; style-src 'self'"
+    >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CookieKit</title>
     <link rel="stylesheet" href="../Style.css">
+    <script type="module" src="../App.js"></script>
 </head>
 <body>
-    <img src="../Icon.png" width="128" height="128" alt="CookieKit Icon">
-    <p>You can turn on CookieKit’s Safari extension in Settings.</p>
+    <main class="onboarding">
+        <header class="hero">
+            <img
+                class="hero-icon"
+                src="../Icon.png"
+                width="112"
+                height="112"
+                alt="CookieKit icon"
+            >
+            <p class="eyebrow">Safari extension for iPhone and iPad</p>
+            <h1>Export the current page’s cookies</h1>
+            <p class="hero-copy">
+                CookieKit creates a Netscape <code>cookies.txt</code> file you can
+                share or copy without sending cookie data to a developer server.
+            </p>
+            <div id="extension-status" class="extension-status" data-state="manual">
+                <span class="status-dot" aria-hidden="true"></span>
+                <span id="extension-status-label">Check Safari Settings</span>
+            </div>
+        </header>
+
+        <section class="panel setup-panel">
+            <div class="section-heading">
+                <p class="eyebrow">Get started</p>
+                <h2>Enable CookieKit in Safari</h2>
+            </div>
+            <ol class="steps">
+                <li>
+                    <span class="step-number">1</span>
+                    <div>
+                        <h3>Open Safari extension settings</h3>
+                        <p>
+                            In Settings, choose Apps, Safari, then Extensions.
+                            On some versions you can search Settings for Safari.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-number">2</span>
+                    <div>
+                        <h3>Turn on CookieKit</h3>
+                        <p>
+                            Select CookieKit, enable the extension, and allow access
+                            for the websites where you intend to export cookies.
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <span class="step-number">3</span>
+                    <div>
+                        <h3>Export from the current page</h3>
+                        <p>
+                            Open an http or https page in Safari, tap the page menu,
+                            choose CookieKit, then Share file or Copy contents.
+                        </p>
+                    </div>
+                </li>
+            </ol>
+            <button id="open-settings-button" class="primary-button" type="button" hidden>
+                Open CookieKit settings
+            </button>
+            <p class="settings-note">
+                The direct Settings button appears on supported iOS and iPadOS
+                versions. The manual steps above work on iOS and iPadOS 18 or later.
+            </p>
+        </section>
+
+        <section class="feature-grid" aria-label="CookieKit features">
+            <article class="feature-card">
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+                        d="M12 3 4.5 6v5.5c0 4.7 3.1 7.8 7.5 9.5 4.4-1.7 7.5-4.8 7.5-9.5V6L12 3Zm-3 9 2 2 4-4"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                    />
+                </svg>
+                <h2>Local by design</h2>
+                <p>
+                    Cookies exist in popup memory only. CookieKit has no analytics,
+                    accounts, third-party SDKs, or network service.
+                </p>
+            </article>
+            <article class="feature-card">
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+                        d="M7 3h8l4 4v14H7V3Zm8 0v5h4M10 12h6m-6 4h6"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                    />
+                </svg>
+                <h2>Compatible format</h2>
+                <p>
+                    Exports the seven-field Netscape format used by tools such as
+                    curl. SameSite and partition metadata cannot be preserved.
+                </p>
+            </article>
+        </section>
+
+        <aside class="security-note">
+            <strong>Treat exports like passwords.</strong>
+            Cookies can grant access to signed-in accounts. Share an export only
+            with a destination you trust, then delete it when it is no longer needed.
+        </aside>
+
+        <footer>
+            <a href="Privacy.html">Read the privacy policy</a>
+            <span aria-hidden="true">•</span>
+            <span>Requires iOS or iPadOS 18+</span>
+        </footer>
+    </main>
 </body>
 </html>
