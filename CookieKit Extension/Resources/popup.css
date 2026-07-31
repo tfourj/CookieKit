@@ -26,6 +26,10 @@ body {
     min-width: 320px;
 }
 
+html {
+    background-color: var(--background);
+}
+
 [hidden] {
     display: none !important;
 }
@@ -36,9 +40,7 @@ body {
     overflow-y: auto;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
-    background:
-        radial-gradient(circle at top right, rgba(246, 173, 85, 0.18), transparent 42%),
-        var(--background);
+    background-color: var(--background);
     color: var(--text);
 }
 
