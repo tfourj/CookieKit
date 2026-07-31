@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
     createCookieDisplayRows,
+    createJsonExport,
     createNetscapeExport,
     selectCookieStore
 } from "../CookieKit Extension/Resources/cookie-export.js";
@@ -180,6 +181,104 @@ test("handles a missing cookie array without persisting or inventing rows", () =
 test("rejects an invalid generated date", () => {
     assert.throws(
         () => createNetscapeExport([], "example.com", "not-a-date"),
+        /valid date/
+    );
+});
+
+test("serializes cookies as deterministic formatted JSON", () => {
+    const result = createJsonExport([
+        {
+            value: "warm",
+            session: false,
+            secure: true,
+            sameSite: "lax",
+            path: "/account",
+            name: "theme",
+            httpOnly: true,
+            hostOnly: true,
+            expirationDate: 2000000000.5,
+            domain: "example.com"
+        },
+        {
+            domain: ".example.com",
+            hostOnly: false,
+            name: "a-cookie",
+            path: "/",
+            secure: false,
+            session: true,
+            value: "line one\nline two"
+        }
+    ], "example.com", generatedAt);
+
+    assert.deepEqual(JSON.parse(result.contents), [
+        {
+            domain: ".example.com",
+            hostOnly: false,
+            name: "a-cookie",
+            path: "/",
+            secure: false,
+            session: true,
+            value: "line one\nline two"
+        },
+        {
+            domain: "example.com",
+            expirationDate: 2000000000.5,
+            hostOnly: true,
+            httpOnly: true,
+            name: "theme",
+            path: "/account",
+            sameSite: "lax",
+            secure: true,
+            session: false,
+            value: "warm"
+        }
+    ]);
+    assert.equal(
+        result.filename,
+        "cookies-example.com-20260731T123456Z.json"
+    );
+    assert.equal(result.exportedCount, 2);
+    assert.equal(result.omittedCount, 0);
+    assert.ok(result.contents.startsWith("[\n  {\n"));
+    assert.ok(result.contents.endsWith("\n"));
+});
+
+test("omits non-cookie values from JSON exports", () => {
+    const result = createJsonExport([
+        null,
+        {
+            domain: "example.com",
+            name: "valid",
+            path: "/",
+            value: "yes",
+            optionalValue: undefined
+        }
+    ], "", generatedAt);
+
+    assert.deepEqual(JSON.parse(result.contents), [
+        {
+            domain: "example.com",
+            name: "valid",
+            path: "/",
+            value: "yes"
+        }
+    ]);
+    assert.equal(result.exportedCount, 1);
+    assert.equal(result.omittedCount, 1);
+    assert.equal(result.filename, "cookies-site-20260731T123456Z.json");
+});
+
+test("handles a missing cookie array in JSON format", () => {
+    const result = createJsonExport(undefined, "example.com", generatedAt);
+
+    assert.equal(result.contents, "[]\n");
+    assert.equal(result.exportedCount, 0);
+    assert.equal(result.omittedCount, 0);
+});
+
+test("rejects an invalid JSON export date", () => {
+    assert.throws(
+        () => createJsonExport([], "example.com", "not-a-date"),
         /valid date/
     );
 });

@@ -105,6 +105,21 @@ function serializeCookie(cookie) {
     return fields.join("\t");
 }
 
+function serializeJsonCookie(cookie) {
+    const serialized = {};
+    const sortedEntries = Object.entries(cookie).sort(([leftKey], [rightKey]) => (
+        compareStrings(leftKey, rightKey)
+    ));
+
+    for (const [key, value] of sortedEntries) {
+        if (value !== undefined) {
+            serialized[key] = value;
+        }
+    }
+
+    return serialized;
+}
+
 function sanitizedHostname(hostname) {
     const sanitized = stringField(hostname)
         .toLowerCase()
@@ -155,6 +170,29 @@ export function createNetscapeExport(cookies, hostname, generatedAt = new Date()
         filename: `cookies-${sanitizedHostname(hostname)}-${timestampForFilename(date)}.txt`,
         exportedCount: lines.length,
         omittedCount
+    };
+}
+
+export function createJsonExport(cookies, hostname, generatedAt = new Date()) {
+    const date = generatedAt instanceof Date ? generatedAt : new Date(generatedAt);
+    if (Number.isNaN(date.getTime())) {
+        throw new TypeError("generatedAt must be a valid date");
+    }
+
+    const serializedCookies = Array.isArray(cookies)
+        ? cookies
+            .filter((cookie) => cookie && typeof cookie === "object")
+            .map(sortableCookie)
+            .sort(compareCookies)
+            .map(({cookie}) => serializeJsonCookie(cookie))
+        : [];
+    const inputCount = Array.isArray(cookies) ? cookies.length : 0;
+
+    return {
+        contents: `${JSON.stringify(serializedCookies, null, 2)}\n`,
+        filename: `cookies-${sanitizedHostname(hostname)}-${timestampForFilename(date)}.json`,
+        exportedCount: serializedCookies.length,
+        omittedCount: inputCount - serializedCookies.length
     };
 }
 
