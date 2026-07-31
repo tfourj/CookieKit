@@ -30,8 +30,11 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
 
     @IBOutlet var webView: WKWebView!
 
+    private static let extensionStateTimeout: TimeInterval = 5
+
     private lazy var scriptMessageHandler = WeakScriptMessageHandler(delegate: self)
     private var webContentIsReady = false
+    private var extensionStateRequestID = 0
 
     private var extensionBundleIdentifier: String {
         let appIdentifier = Bundle.main.bundleIdentifier ?? "com.tfourj.CookieKit"
@@ -116,22 +119,57 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
             return
         }
 
+        extensionStateRequestID += 1
+        let requestID = extensionStateRequestID
+        updateWebExtensionState(state: "checking", canOpenSettings: true)
+        scheduleExtensionStateTimeout(for: requestID)
+
         SFSafariExtensionManager.getStateOfExtension(
             withIdentifier: extensionBundleIdentifier
-        ) { [weak self] state, _ in
-            let status: String
-            if let state {
-                status = state.isEnabled ? "enabled" : "disabled"
-            } else {
-                status = "unknown"
-            }
-
+        ) { [weak self] state, error in
             DispatchQueue.main.async { [weak self] in
-                self?.updateWebExtensionState(
+                guard
+                    let self,
+                    requestID == self.extensionStateRequestID
+                else {
+                    return
+                }
+
+                self.extensionStateRequestID += 1
+
+                let status: String
+                if error != nil {
+                    status = "unknown"
+                } else if let state {
+                    status = state.isEnabled ? "enabled" : "disabled"
+                } else {
+                    status = "unknown"
+                }
+
+                self.updateWebExtensionState(
                     state: status,
                     canOpenSettings: true
                 )
             }
+        }
+    }
+
+    private func scheduleExtensionStateTimeout(for requestID: Int) {
+        DispatchQueue.main.asyncAfter(
+            deadline: .now() + Self.extensionStateTimeout
+        ) { [weak self] in
+            guard
+                let self,
+                requestID == self.extensionStateRequestID
+            else {
+                return
+            }
+
+            self.extensionStateRequestID += 1
+            self.updateWebExtensionState(
+                state: "unknown",
+                canOpenSettings: true
+            )
         }
     }
 
@@ -153,21 +191,23 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         state: String,
         canOpenSettings: Bool
     ) {
-        let payload: [String: Any] = [
+        let status: [String: Any] = [
             "state": state,
             "canOpenSettings": canOpenSettings
         ]
 
-        guard
-            let data = try? JSONSerialization.data(withJSONObject: payload),
-            let json = String(data: data, encoding: .utf8)
-        else {
-            return
+        webView.callAsyncJavaScript(
+            "window.CookieKit.updateExtensionState(status)",
+            arguments: ["status": status],
+            in: nil,
+            in: .page
+        ) { result in
+            #if DEBUG
+            if case .failure(let error) = result {
+                print("Failed to update Safari extension status: \(error)")
+            }
+            #endif
         }
-
-        webView.evaluateJavaScript(
-            "window.CookieKit?.updateExtensionState(\(json));"
-        )
     }
 
 }

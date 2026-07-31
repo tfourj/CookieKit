@@ -9,7 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CookieKit</title>
     <link rel="stylesheet" href="../Style.css">
-    <script type="module" src="../App.js"></script>
+    <script src="../OnboardingState.js" defer></script>
+    <script src="../App.js" defer></script>
 </head>
 <body>
     <main class="onboarding">
@@ -28,10 +29,39 @@
                 you can export or copy without sending cookie data to a developer
                 server.
             </p>
-            <div id="extension-status" class="extension-status" data-state="manual">
+            <div
+                id="extension-status"
+                class="extension-status"
+                data-state="checking"
+                data-tone="orange"
+                role="status"
+                aria-live="polite"
+                aria-describedby="extension-status-detail"
+            >
                 <span class="status-dot" aria-hidden="true"></span>
-                <span id="extension-status-label">Check Safari Settings</span>
+                <span class="status-copy">
+                    <span class="status-title">Safari extension</span>
+                    <strong id="extension-status-label">Checking Safari…</strong>
+                </span>
             </div>
+            <p
+                id="extension-status-detail"
+                class="extension-status-detail"
+            >
+                Checking whether CookieKit is enabled.
+            </p>
+            <button
+                id="check-status-button"
+                class="check-status-button"
+                type="button"
+                disabled
+            >
+                Check again
+            </button>
+            <p class="permission-status">
+                <span class="permission-dot" aria-hidden="true"></span>
+                Website access is managed by Safari for each website.
+            </p>
         </header>
 
         <section class="panel setup-panel">
@@ -39,46 +69,63 @@
                 <p class="eyebrow">Get started</p>
                 <h2>Enable CookieKit in Safari</h2>
             </div>
-            <ol class="steps">
-                <li>
-                    <span class="step-number">1</span>
-                    <div>
-                        <h3>Open Safari extension settings</h3>
-                        <p>
-                            In Settings, choose Apps, Safari, then Extensions.
-                            On some versions you can search Settings for Safari.
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <span class="step-number">2</span>
-                    <div>
-                        <h3>Turn on CookieKit</h3>
-                        <p>
-                            Select CookieKit, enable the extension, and allow access
-                            for the websites where you intend to export cookies.
-                        </p>
-                    </div>
-                </li>
-                <li>
-                    <span class="step-number">3</span>
-                    <div>
+            <button
+                id="toggle-setup-button"
+                class="secondary-button"
+                type="button"
+                aria-controls="setup-instructions"
+                aria-expanded="true"
+                hidden
+            >
+                Hide setup instructions
+            </button>
+            <div id="setup-instructions">
+                <ol class="steps">
+                    <li>
+                        <span class="step-number">1</span>
+                        <div>
+                            <h3>Open Safari extension settings</h3>
+                            <p>
+                                In Settings, choose Apps, Safari, then Extensions.
+                                On some versions you can search Settings for Safari.
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="step-number">2</span>
+                        <div>
+                            <h3>Turn on CookieKit</h3>
+                            <p>
+                                Select CookieKit, enable the extension, and allow access
+                                for the websites where you intend to export cookies.
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="step-number">3</span>
+                        <div>
                             <h3>Export from the current page</h3>
                             <p>
-                                Open an http or https page in Safari, tap the page menu,
-                                choose CookieKit, select a format, then Show cookies,
-                                Export cookies, or Copy cookies.
+                                Open an http or https page in Safari, tap the page
+                                menu, choose CookieKit, select a format, then Show
+                                cookies, Export cookies, or Copy cookies.
                             </p>
-                    </div>
-                </li>
-            </ol>
-            <button id="open-settings-button" class="primary-button" type="button" hidden>
-                Open CookieKit settings
-            </button>
-            <p class="settings-note">
-                The direct Settings button appears on supported iOS and iPadOS
-                versions. The manual steps above work on iOS and iPadOS 18 or later.
-            </p>
+                        </div>
+                    </li>
+                </ol>
+                <button
+                    id="open-settings-button"
+                    class="primary-button"
+                    type="button"
+                    hidden
+                >
+                    Open CookieKit settings
+                </button>
+                <p class="settings-note">
+                    The direct Settings button appears on supported iOS and iPadOS
+                    versions. Website access is managed per site by Safari.
+                </p>
+            </div>
         </section>
 
         <section class="feature-grid" aria-label="CookieKit features">

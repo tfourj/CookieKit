@@ -22,6 +22,11 @@ advertising, tracking, or developer-operated server.
 Safari keeps you in control of website permissions. You can change or revoke
 CookieKit's access at any time.
 
+On iOS or iPadOS 26.2 and later, the containing app checks whether the Safari
+extension is enabled and collapses the setup instructions when it is ready.
+Safari manages website access per site, so CookieKit checks that access when you
+use the extension on a page.
+
 ## Export cookies
 
 1. Open a regular HTTP or HTTPS webpage in Safari.
