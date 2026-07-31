@@ -16,7 +16,7 @@
         "description": "Popup format label."
     },
     "security_warning": {
-        "message": "Cookies can grant access to your accounts. Share this file only with destinations you trust.",
+        "message": "Cookies can grant account access. Share only with trusted destinations.",
         "description": "Warning shown before cookies can be exported."
     },
     "loading_title": {
