@@ -180,10 +180,12 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
 
         SFSafariSettings.openExtensionsSettings(
             forIdentifiers: [extensionBundleIdentifier]
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.refreshExtensionState()
+        ) { error in
+            #if DEBUG
+            if let error {
+                print("Failed to open Safari Extensions settings: \(error)")
             }
+            #endif
         }
     }
 

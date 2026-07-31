@@ -200,7 +200,14 @@ code {
     box-shadow: 0 0 0 5px color-mix(in srgb, currentColor 16%, transparent);
 }
 
-.check-status-button {
+.status-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.status-action-button {
     min-height: 44px;
     padding: 9px 17px;
     border: 1px solid var(--border);
@@ -212,11 +219,11 @@ code {
     font-weight: 700;
 }
 
-.check-status-button:active:not(:disabled) {
+.status-action-button:active:not(:disabled) {
     transform: scale(0.985);
 }
 
-.check-status-button:disabled {
+.status-action-button:disabled {
     opacity: 0.58;
 }
 

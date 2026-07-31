@@ -50,14 +50,24 @@
             >
                 Checking whether CookieKit is enabled.
             </p>
-            <button
-                id="check-status-button"
-                class="check-status-button"
-                type="button"
-                disabled
-            >
-                Check again
-            </button>
+            <div class="status-actions">
+                <button
+                    id="check-status-button"
+                    class="status-action-button"
+                    type="button"
+                    disabled
+                >
+                    Check again
+                </button>
+                <button
+                    id="open-settings-button"
+                    class="status-action-button"
+                    type="button"
+                    hidden
+                >
+                    Open Safari Extensions
+                </button>
+            </div>
             <p class="permission-status">
                 <span class="permission-dot" aria-hidden="true"></span>
                 Website access is managed by Safari for each website.
@@ -113,14 +123,6 @@
                         </div>
                     </li>
                 </ol>
-                <button
-                    id="open-settings-button"
-                    class="primary-button"
-                    type="button"
-                    hidden
-                >
-                    Open CookieKit settings
-                </button>
                 <p class="settings-note">
                     The direct Settings button appears on supported iOS and iPadOS
                     versions. Website access is managed per site by Safari.
