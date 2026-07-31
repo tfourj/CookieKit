@@ -135,13 +135,6 @@ code {
     text-transform: uppercase;
 }
 
-.hero-copy {
-    max-width: 610px;
-    margin-bottom: 20px;
-    color: var(--muted);
-    font-size: 18px;
-}
-
 .extension-status {
     display: flex;
     align-items: center;
