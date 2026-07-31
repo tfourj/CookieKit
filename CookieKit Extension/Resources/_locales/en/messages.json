@@ -11,10 +11,6 @@
         "message": "Export cookies",
         "description": "Popup heading."
     },
-    "popup_subtitle": {
-        "message": "Netscape or JSON",
-        "description": "Popup summary of the available formats."
-    },
     "security_warning": {
         "message": "Cookies can grant account access. Share only with trusted destinations.",
         "description": "Warning shown before cookies can be exported."
