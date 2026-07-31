@@ -39,12 +39,15 @@ main {
     display: grid;
     gap: 16px;
     padding: 18px;
+    text-align: center;
 }
 
 .header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .app-icon {
@@ -73,8 +76,9 @@ h1 {
 
 .warning {
     display: flex;
-    gap: 10px;
-    align-items: flex-start;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
     padding: 12px;
     border: 1px solid var(--warning-border);
     border-radius: 12px;
@@ -91,9 +95,11 @@ h1 {
 }
 
 .status-card {
-    display: grid;
-    grid-template-columns: 20px minmax(0, 1fr);
-    gap: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
     min-height: 88px;
     padding: 15px;
     border: 1px solid var(--border);
@@ -105,7 +111,6 @@ h1 {
 .status-indicator {
     width: 12px;
     height: 12px;
-    margin-top: 4px;
     border-radius: 999px;
     background: var(--success);
 }
@@ -146,6 +151,7 @@ h1 {
 .actions {
     display: grid;
     gap: 9px;
+    justify-items: center;
 }
 
 button {
@@ -153,6 +159,8 @@ button {
     align-items: center;
     justify-content: center;
     gap: 8px;
+    width: 100%;
+    max-width: 280px;
     min-height: 46px;
     padding: 10px 16px;
     border: 1px solid transparent;
