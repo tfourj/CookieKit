@@ -24,7 +24,6 @@ html,
 body {
     width: 100%;
     min-width: 320px;
-    min-height: 560px;
 }
 
 [hidden] {
@@ -32,6 +31,7 @@ body {
 }
 
 body {
+    max-height: 100vh;
     margin: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
@@ -44,12 +44,11 @@ body {
 
 main {
     display: grid;
-    gap: 16px;
+    gap: 10px;
     width: 100%;
     max-width: 360px;
-    min-height: 560px;
     margin: 0 auto;
-    padding: 18px 18px max(28px, env(safe-area-inset-bottom));
+    padding: 12px 14px max(20px, env(safe-area-inset-bottom));
     text-align: center;
 }
 
@@ -57,14 +56,24 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    gap: 8px;
+    gap: 10px;
+}
+
+.header > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px 8px;
+    min-width: 0;
 }
 
 .app-icon {
     flex: 0 0 auto;
-    border-radius: 12px;
-    box-shadow: 0 5px 16px rgba(86, 42, 15, 0.18);
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+    box-shadow: 0 4px 12px rgba(86, 42, 15, 0.16);
 }
 
 h1,
@@ -74,54 +83,64 @@ p {
 }
 
 h1 {
-    font-size: 20px;
-    line-height: 1.2;
+    font-size: 17px;
+    line-height: 1.15;
     letter-spacing: -0.02em;
 }
 
 .subtitle {
-    margin-top: 3px;
     color: var(--muted);
-    font-size: 13px;
+    font-size: 11.5px;
+    white-space: nowrap;
 }
 
 .warning {
     display: flex;
     align-items: center;
-    flex-direction: column;
-    gap: 8px;
-    padding: 12px;
+    justify-content: center;
+    gap: 7px;
+    padding: 8px 10px;
     border: 1px solid var(--warning-border);
-    border-radius: 12px;
+    border-radius: 10px;
     background: var(--warning-background);
     color: var(--warning-text);
-    font-size: 13px;
-    line-height: 1.35;
+    font-size: 11.5px;
+    line-height: 1.25;
+    text-align: left;
 }
 
 .warning svg {
     flex: 0 0 auto;
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
 }
 
 .status-card {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    gap: 8px;
-    min-height: 88px;
-    padding: 15px;
+    gap: 7px;
+    min-height: 52px;
+    padding: 9px 11px;
     border: 1px solid var(--border);
-    border-radius: 14px;
+    border-radius: 11px;
     background: var(--card);
     box-shadow: 0 8px 24px rgba(71, 35, 17, 0.06);
 }
 
+.status-card > div {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2px 7px;
+    min-width: 0;
+}
+
 .status-indicator {
-    width: 12px;
-    height: 12px;
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
     border-radius: 999px;
     background: var(--success);
 }
@@ -142,34 +161,42 @@ h1 {
 }
 
 .status-card h2 {
-    font-size: 15px;
-    line-height: 1.35;
+    font-size: 13px;
+    line-height: 1.25;
 }
 
 .status-card p {
-    margin-top: 4px;
     color: var(--muted);
-    font-size: 13px;
-    line-height: 1.4;
+    font-size: 11.5px;
+    line-height: 1.3;
     overflow-wrap: anywhere;
 }
 
 .status-card .omitted-warning {
+    flex-basis: 100%;
     color: var(--error);
     font-weight: 600;
 }
 
 .actions {
     display: grid;
-    gap: 9px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
     justify-items: center;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#show-cookies-button {
+    grid-column: 1 / -1;
 }
 
 .cookie-viewer {
     display: grid;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
-    padding: 14px;
+    padding: 10px;
     border: 1px solid var(--border);
     border-radius: 14px;
     background: var(--card);
@@ -182,7 +209,7 @@ h1 {
 }
 
 .cookie-table-scroll {
-    max-height: 240px;
+    max-height: 200px;
     overflow: auto;
     border: 1px solid var(--border);
     border-radius: 10px;
@@ -240,15 +267,14 @@ button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     width: 100%;
-    max-width: 280px;
-    min-height: 46px;
-    padding: 10px 16px;
+    min-height: 40px;
+    padding: 8px;
     border: 1px solid transparent;
     border-radius: 12px;
     font: inherit;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: 650;
     cursor: pointer;
     transition:
@@ -259,8 +285,8 @@ button {
 }
 
 button svg {
-    width: 19px;
-    height: 19px;
+    width: 17px;
+    height: 17px;
 }
 
 button:active:not(:disabled) {
@@ -341,10 +367,10 @@ button:disabled {
 
 @media (max-width: 340px) {
     main {
-        padding: 14px 14px max(24px, env(safe-area-inset-bottom));
+        padding: 10px 12px max(18px, env(safe-area-inset-bottom));
     }
 
     .warning {
-        font-size: 12px;
+        font-size: 11px;
     }
 }
