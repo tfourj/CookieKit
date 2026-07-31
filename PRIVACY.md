@@ -8,10 +8,11 @@ CookieKit does not collect, store, sell, or transmit personal data.
 
 When a user explicitly opens the CookieKit Safari extension, the extension asks
 Safari for the cookies that apply to the current HTTP or HTTPS page. CookieKit
-formats those cookies in Netscape `cookies.txt` format in the extension popup's
-memory. If the user chooses **Show cookies**, the popup also displays cookie names
-and values in a local table. It does not persist the cookies in app storage,
-extension storage, logs, analytics, or a developer-controlled server.
+formats those cookies in the selected Netscape `cookies.txt` or JSON format in
+the extension popup's memory. If the user chooses **Show cookies**, the popup also
+displays cookie names and values in a local table. It does not persist the cookies
+in app storage, extension storage, logs, analytics, or a developer-controlled
+server.
 
 CookieKit does not run a content script or background process on webpages.
 
@@ -39,9 +40,9 @@ may be able to read the displayed values.
 
 Cookie data leaves CookieKit only when the user chooses one of these actions:
 
-- **Share file** passes an in-memory text file to the iOS or iPadOS system share
-  sheet.
-- **Copy contents** writes the formatted text to the system clipboard.
+- **Export cookies** passes an in-memory text or JSON file to the iOS or iPadOS
+  system share sheet.
+- **Copy cookies** writes the selected format to the system clipboard.
 
 The destination selected by the user, including another app, AirDrop recipient, or
 clipboard consumer, may store or process the exported data under its own privacy

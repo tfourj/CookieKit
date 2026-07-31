@@ -1,5 +1,6 @@
 import {
     createCookieDisplayRows,
+    createJsonExport,
     createNetscapeExport,
     selectCookieStore
 } from "./cookie-export.js";
@@ -8,7 +9,8 @@ const statusCard = document.querySelector("#status");
 const statusTitle = document.querySelector("#status-title");
 const statusBody = document.querySelector("#status-body");
 const omittedWarning = document.querySelector("#omitted-warning");
-const shareButton = document.querySelector("#share-button");
+const formatSelect = document.querySelector("#format-select");
+const exportButton = document.querySelector("#export-button");
 const copyButton = document.querySelector("#copy-button");
 const copyLabel = document.querySelector("#copy-label");
 const showCookiesButton = document.querySelector("#show-cookies-button");
@@ -20,6 +22,9 @@ const actionNotice = document.querySelector("#action-notice");
 let preparedExport = null;
 let preparedFile = null;
 let preparedCookieRows = [];
+let sourceCookies = [];
+let sourceHostname = "";
+let exportGeneratedAt = null;
 
 function message(key, substitutions) {
     return browser.i18n.getMessage(key, substitutions);
@@ -44,7 +49,7 @@ function setStatus(state, titleKey, bodyKey, titleSubstitutions, bodySubstitutio
 
 function setActionsEnabled(enabled) {
     copyButton.disabled = !enabled;
-    shareButton.disabled = !enabled || !supportsFileSharing(preparedFile);
+    exportButton.disabled = !enabled || !supportsFileSharing(preparedFile);
 }
 
 function setCookieViewerVisible(visible) {
@@ -134,6 +139,10 @@ function isPermissionError(error) {
 function showError(titleKey, bodyKey) {
     preparedExport = null;
     preparedFile = null;
+    sourceCookies = [];
+    sourceHostname = "";
+    exportGeneratedAt = null;
+    formatSelect.disabled = true;
     setCookieRows([]);
     setActionsEnabled(false);
     setOmittedWarning(0);
@@ -146,7 +155,11 @@ function showReady(exportResult, hostname) {
     preparedFile = new File(
         [exportResult.contents],
         exportResult.filename,
-        {type: "text/plain"}
+        {
+            type: formatSelect.value === "json"
+                ? "application/json"
+                : "text/plain"
+        }
     );
 
     const titleKey = exportResult.exportedCount === 1
@@ -167,6 +180,37 @@ function showReady(exportResult, hostname) {
     } else {
         setActionNotice("share_unavailable_title", "share_unavailable_body");
     }
+}
+
+function showEmptyExport(exportResult) {
+    preparedExport = null;
+    preparedFile = null;
+    setStatus("empty", "empty_title", "empty_body");
+    setOmittedWarning(exportResult.omittedCount);
+    setActionsEnabled(false);
+    setActionNotice();
+}
+
+function prepareSelectedFormat() {
+    if (!exportGeneratedAt) {
+        return;
+    }
+
+    const createExport = formatSelect.value === "json"
+        ? createJsonExport
+        : createNetscapeExport;
+    const exportResult = createExport(
+        sourceCookies,
+        sourceHostname,
+        exportGeneratedAt
+    );
+
+    if (exportResult.exportedCount === 0) {
+        showEmptyExport(exportResult);
+        return;
+    }
+
+    showReady(exportResult, sourceHostname);
 }
 
 async function prepareCurrentPageExport() {
@@ -200,20 +244,11 @@ async function prepareCurrentPageExport() {
             storeId: store.id
         });
         setCookieRows(createCookieDisplayRows(cookies));
-        const exportResult = createNetscapeExport(
-            cookies,
-            pageURL.hostname,
-            new Date()
-        );
-
-        if (exportResult.exportedCount === 0) {
-            setStatus("empty", "empty_title", "empty_body");
-            setOmittedWarning(exportResult.omittedCount);
-            setActionsEnabled(false);
-            return;
-        }
-
-        showReady(exportResult, pageURL.hostname);
+        sourceCookies = cookies;
+        sourceHostname = pageURL.hostname;
+        exportGeneratedAt = new Date();
+        formatSelect.disabled = cookies.length === 0;
+        prepareSelectedFormat();
     } catch (error) {
         if (isPermissionError(error)) {
             showError("permission_title", "permission_body");
@@ -223,7 +258,7 @@ async function prepareCurrentPageExport() {
     }
 }
 
-shareButton.addEventListener("click", async () => {
+exportButton.addEventListener("click", async () => {
     if (!preparedFile || !supportsFileSharing(preparedFile)) {
         setActionNotice("share_unavailable_title", "share_unavailable_body");
         return;
@@ -240,6 +275,11 @@ shareButton.addEventListener("click", async () => {
             setActionNotice("share_failed_title", "share_failed_body");
         }
     }
+});
+
+formatSelect.addEventListener("change", () => {
+    copyLabel.textContent = message("copy_button");
+    prepareSelectedFormat();
 });
 
 showCookiesButton.addEventListener("click", () => {

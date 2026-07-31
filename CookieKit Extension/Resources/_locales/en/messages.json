@@ -4,7 +4,7 @@
         "description": "The display name for the extension."
     },
     "extension_description": {
-        "message": "Export cookies for the current Safari page in Netscape cookies.txt format.",
+        "message": "Export cookies for the current Safari page in Netscape cookies.txt or JSON format.",
         "description": "Description of what the extension does."
     },
     "popup_title": {
@@ -12,8 +12,8 @@
         "description": "Popup heading."
     },
     "popup_subtitle": {
-        "message": "Netscape cookies.txt",
-        "description": "Popup format label."
+        "message": "Netscape or JSON",
+        "description": "Popup summary of the available formats."
     },
     "security_warning": {
         "message": "Cookies can grant account access. Share only with trusted destinations.",
@@ -65,12 +65,24 @@
         "message": "1 malformed cookie omitted",
         "description": "Singular malformed-cookie warning."
     },
-    "share_button": {
-        "message": "Share file",
+    "format_label": {
+        "message": "Format",
+        "description": "Label for the cookie export format selector."
+    },
+    "netscape_format": {
+        "message": "Netscape cookies.txt",
+        "description": "Netscape cookie export format option."
+    },
+    "json_format": {
+        "message": "JSON",
+        "description": "JSON cookie export format option."
+    },
+    "export_button": {
+        "message": "Export cookies",
         "description": "Primary export action."
     },
     "copy_button": {
-        "message": "Copy contents",
+        "message": "Copy cookies",
         "description": "Secondary export action."
     },
     "show_cookies_button": {
@@ -142,7 +154,7 @@
         "description": "Status when the system cannot share the export as a file."
     },
     "share_unavailable_body": {
-        "message": "Use Copy contents instead.",
+        "message": "Use Copy cookies instead.",
         "description": "Fallback when sharing is unsupported."
     },
     "share_failed_title": {
@@ -150,7 +162,7 @@
         "description": "Status after a sharing error."
     },
     "share_failed_body": {
-        "message": "Try again or use Copy contents.",
+        "message": "Try again or use Copy cookies.",
         "description": "Fallback after a sharing error."
     },
     "copy_failed_title": {

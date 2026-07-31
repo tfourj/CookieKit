@@ -1,7 +1,7 @@
 # CookieKit
 
 CookieKit is a Safari extension for iPhone and iPad that exports the cookies for
-the current webpage in Netscape `cookies.txt` format.
+the current webpage in Netscape `cookies.txt` or JSON format.
 
 CookieKit prepares each export locally. It has no accounts, analytics,
 advertising, tracking, or developer-operated server.
@@ -27,16 +27,17 @@ CookieKit's access at any time.
 1. Open a regular HTTP or HTTPS webpage in Safari.
 2. Open Safari's page menu and select CookieKit.
 3. Review the website and number of cookies found.
-4. Select **Show cookies** to inspect cookie keys and values in the popup,
-   **Share file** to create a `.txt` file, or **Copy contents** to copy the export
-   to the clipboard.
+4. Choose Netscape `cookies.txt` or JSON.
+5. Select **Show cookies** to inspect cookie keys and values in the popup,
+   **Export cookies** to open the system export sheet, or **Copy cookies** to copy
+   the selected format to the clipboard.
 
 CookieKit exports only cookies that apply to the current page and its active
 Safari profile or private-browsing store.
 
-## Export format
+## Export formats
 
-The generated file uses the standard seven-field Netscape format:
+The Netscape option generates the standard seven-field format:
 
 ```text
 domain    include-subdomains    path    secure    expiry    name    value
@@ -51,6 +52,10 @@ CookieKit supports:
 - deterministic ordering by domain, path, and name
 
 The Netscape format cannot preserve SameSite attributes or partition keys.
+
+The JSON option generates a formatted array of cookie objects. It preserves the
+cookie attributes Safari provides, including SameSite and other metadata that can
+be represented as JSON.
 
 ## Privacy and security
 

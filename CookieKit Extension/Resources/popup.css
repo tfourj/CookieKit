@@ -178,6 +178,44 @@ h1 {
     font-weight: 600;
 }
 
+.format-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.format-picker label {
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.format-picker select {
+    min-width: 0;
+    min-height: 34px;
+    padding: 6px 28px 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: var(--card);
+    color: var(--text);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.format-picker select:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    outline-offset: 2px;
+}
+
+.format-picker select:disabled {
+    opacity: 0.48;
+}
+
 .actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

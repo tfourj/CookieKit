@@ -19,7 +19,7 @@
             >
             <div>
                 <h1 data-i18n="popup_title">Export cookies</h1>
-                <p class="subtitle" data-i18n="popup_subtitle">Netscape cookies.txt</p>
+                <p class="subtitle" data-i18n="popup_subtitle">Netscape or JSON</p>
             </div>
         </header>
 
@@ -52,8 +52,18 @@
             </div>
         </section>
 
+        <div class="format-picker">
+            <label for="format-select" data-i18n="format_label">Format</label>
+            <select id="format-select" disabled>
+                <option value="netscape" data-i18n="netscape_format">
+                    Netscape cookies.txt
+                </option>
+                <option value="json" data-i18n="json_format">JSON</option>
+            </select>
+        </div>
+
         <div class="actions">
-            <button id="share-button" class="primary" type="button" disabled>
+            <button id="export-button" class="primary" type="button" disabled>
                 <svg aria-hidden="true" viewBox="0 0 24 24">
                     <path
                         d="M12 15V3m0 0L7.5 7.5M12 3l4.5 4.5M5 13v6.5h14V13"
@@ -64,7 +74,7 @@
                         stroke-width="2"
                     />
                 </svg>
-                <span data-i18n="share_button">Share file</span>
+                <span data-i18n="export_button">Export cookies</span>
             </button>
             <button id="copy-button" class="secondary" type="button" disabled>
                 <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -76,7 +86,7 @@
                         stroke-width="2"
                     />
                 </svg>
-                <span id="copy-label" data-i18n="copy_button">Copy contents</span>
+                <span id="copy-label" data-i18n="copy_button">Copy cookies</span>
             </button>
             <button
                 id="show-cookies-button"
