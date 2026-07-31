@@ -79,7 +79,51 @@
                 </svg>
                 <span id="copy-label" data-i18n="copy_button">Copy contents</span>
             </button>
+            <button
+                id="show-cookies-button"
+                class="secondary"
+                type="button"
+                aria-controls="cookie-viewer"
+                aria-expanded="false"
+                disabled
+            >
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+                        d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Zm9.5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                    />
+                </svg>
+                <span id="show-cookies-label" data-i18n="show_cookies_button">
+                    Show cookies
+                </span>
+            </button>
         </div>
+
+        <section
+            id="cookie-viewer"
+            class="cookie-viewer"
+            aria-labelledby="cookie-table-title"
+            hidden
+        >
+            <h2 id="cookie-table-title" data-i18n="cookie_table_title">
+                Cookies for this page
+            </h2>
+            <div class="cookie-table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th scope="col" data-i18n="cookie_key_header">Key</th>
+                            <th scope="col" data-i18n="cookie_value_header">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cookie-table-body"></tbody>
+                </table>
+            </div>
+        </section>
 
         <p id="action-notice" class="action-notice" role="status" hidden></p>
     </main>

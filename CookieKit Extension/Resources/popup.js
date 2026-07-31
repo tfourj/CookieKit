@@ -1,4 +1,5 @@
 import {
+    createCookieDisplayRows,
     createNetscapeExport,
     selectCookieStore
 } from "./cookie-export.js";
@@ -10,10 +11,15 @@ const omittedWarning = document.querySelector("#omitted-warning");
 const shareButton = document.querySelector("#share-button");
 const copyButton = document.querySelector("#copy-button");
 const copyLabel = document.querySelector("#copy-label");
+const showCookiesButton = document.querySelector("#show-cookies-button");
+const showCookiesLabel = document.querySelector("#show-cookies-label");
+const cookieViewer = document.querySelector("#cookie-viewer");
+const cookieTableBody = document.querySelector("#cookie-table-body");
 const actionNotice = document.querySelector("#action-notice");
 
 let preparedExport = null;
 let preparedFile = null;
+let preparedCookieRows = [];
 
 function message(key, substitutions) {
     return browser.i18n.getMessage(key, substitutions);
@@ -39,6 +45,37 @@ function setStatus(state, titleKey, bodyKey, titleSubstitutions, bodySubstitutio
 function setActionsEnabled(enabled) {
     copyButton.disabled = !enabled;
     shareButton.disabled = !enabled || !supportsFileSharing(preparedFile);
+}
+
+function setCookieViewerVisible(visible) {
+    const shouldShow = visible && preparedCookieRows.length > 0;
+    cookieViewer.hidden = !shouldShow;
+    showCookiesButton.setAttribute("aria-expanded", String(shouldShow));
+    showCookiesLabel.textContent = message(
+        shouldShow ? "hide_cookies_button" : "show_cookies_button"
+    );
+}
+
+function setCookieRows(rows) {
+    preparedCookieRows = rows;
+    cookieTableBody.replaceChildren();
+
+    const fragment = document.createDocumentFragment();
+    for (const row of rows) {
+        const tableRow = document.createElement("tr");
+        const keyCell = document.createElement("th");
+        const valueCell = document.createElement("td");
+
+        keyCell.scope = "row";
+        keyCell.textContent = row.key;
+        valueCell.textContent = row.value;
+        tableRow.append(keyCell, valueCell);
+        fragment.append(tableRow);
+    }
+
+    cookieTableBody.append(fragment);
+    showCookiesButton.disabled = rows.length === 0;
+    setCookieViewerVisible(false);
 }
 
 function setActionNotice(titleKey, bodyKey) {
@@ -97,6 +134,7 @@ function isPermissionError(error) {
 function showError(titleKey, bodyKey) {
     preparedExport = null;
     preparedFile = null;
+    setCookieRows([]);
     setActionsEnabled(false);
     setOmittedWarning(0);
     setActionNotice();
@@ -161,6 +199,7 @@ async function prepareCurrentPageExport() {
             url: pageURL.href,
             storeId: store.id
         });
+        setCookieRows(createCookieDisplayRows(cookies));
         const exportResult = createNetscapeExport(
             cookies,
             pageURL.hostname,
@@ -201,6 +240,10 @@ shareButton.addEventListener("click", async () => {
             setActionNotice("share_failed_title", "share_failed_body");
         }
     }
+});
+
+showCookiesButton.addEventListener("click", () => {
+    setCookieViewerVisible(cookieViewer.hidden);
 });
 
 copyButton.addEventListener("click", async () => {
