@@ -18,7 +18,7 @@
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6HG-Um-bch">
                                 <rect key="frame" x="142" y="385" width="128" height="128"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
-                                <imageReference key="image" image="LargeIcon"/>
+                                <imageReference key="image" image="RoundedLaunchIcon"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -31,6 +31,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="LargeIcon" width="128" height="128"/>
+        <image name="RoundedLaunchIcon" width="128" height="128"/>
     </resources>
 </document>
