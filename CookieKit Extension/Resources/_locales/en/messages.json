@@ -73,6 +73,26 @@
         "message": "Copy contents",
         "description": "Secondary export action."
     },
+    "show_cookies_button": {
+        "message": "Show cookies",
+        "description": "Action that reveals cookie names and values."
+    },
+    "hide_cookies_button": {
+        "message": "Hide cookies",
+        "description": "Action that conceals cookie names and values."
+    },
+    "cookie_table_title": {
+        "message": "Cookies for this page",
+        "description": "Heading above the cookie name and value table."
+    },
+    "cookie_key_header": {
+        "message": "Key",
+        "description": "Header for the cookie-name column."
+    },
+    "cookie_value_header": {
+        "message": "Value",
+        "description": "Header for the cookie-value column."
+    },
     "copied_button": {
         "message": "Copied",
         "description": "Temporary confirmation after copying."
