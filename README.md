@@ -1,7 +1,8 @@
 # CookieKit
 
-CookieKit is a Safari extension for iPhone and iPad that exports the cookies for
-the current webpage in Netscape `cookies.txt` or JSON format.
+CookieKit is a Safari extension for iPhone and iPad that imports, edits, and
+exports the cookies for the current webpage. It supports Netscape `cookies.txt`
+and JSON files.
 
 CookieKit prepares each export locally. It has no accounts, analytics,
 advertising, tracking, or developer-operated server.
@@ -40,6 +41,31 @@ use the extension on a page.
 CookieKit exports only cookies that apply to the current page and its active
 Safari profile or private-browsing store.
 
+## Import cookies
+
+1. Open the website whose cookies you want to update.
+2. Open CookieKit and select **Import cookies**.
+3. Choose a CookieKit JSON file, a JSON object containing a `cookies` array, or
+   a Netscape `cookies.txt` file.
+4. Review the number of imported and skipped cookies, then reload the webpage if
+   it needs to use the new values immediately.
+
+CookieKit writes imported cookies only when their domain applies to the current
+website. Host-only cookies must match the current hostname exactly. Malformed,
+expired, unrelated, and Safari-rejected cookies are skipped. Imports use the
+active Safari profile or private-browsing store and are never saved by CookieKit.
+
+## Edit cookies
+
+1. Select **Show cookies** in the popup.
+2. Select **Edit** beside a cookie.
+3. Change its name or value and select **Save cookie**.
+
+CookieKit preserves the cookie's domain, path, security, expiry, HttpOnly, and
+SameSite attributes when saving an edit. Renaming creates the replacement before
+removing the old name. Reload the webpage if it needs to read the updated cookie
+immediately.
+
 ## Export formats
 
 The Netscape option generates the standard seven-field format:
@@ -64,16 +90,17 @@ be represented as JSON.
 
 ## Privacy and security
 
-Cookies are processed in memory only. CookieKit does not save them or transmit
-them to the developer. Cookie names and values appear only after you select
-**Show cookies**, and the on-screen table is discarded when the popup closes.
+Cookies and user-selected import files are processed in memory only. CookieKit
+does not save them or transmit them to the developer. Cookie names and values
+appear only after you select **Show cookies** or open the editor, and the
+on-screen data is discarded when the popup closes.
 
 Cookie data leaves CookieKit only when you explicitly share the file or copy its
 contents. The selected app, recipient, or clipboard consumer may then store that
 data under its own terms.
 
 Cookies can grant access to signed-in accounts. Treat every export like a
-password: share it only with trusted destinations and delete it when it is no
-longer needed.
+password, and import files only from trusted sources. Share exports only with
+trusted destinations and delete them when they are no longer needed.
 
 Read the full [privacy policy](PRIVACY.md).
