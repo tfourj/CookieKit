@@ -205,9 +205,10 @@ export function createCookieDisplayRows(cookies) {
         .filter((cookie) => cookie && typeof cookie === "object")
         .map(sortableCookie)
         .sort(compareDisplayCookies)
-        .map(({cookie}) => ({
+        .map(({cookie, index}) => ({
             key: stringField(cookie.name),
-            value: stringField(cookie.value)
+            value: stringField(cookie.value),
+            sourceIndex: index
         }));
 }
 

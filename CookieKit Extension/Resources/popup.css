@@ -191,11 +191,13 @@ p {
     margin: 0 auto;
 }
 
+#import-button,
 #show-cookies-button {
     grid-column: 1 / -1;
 }
 
-.cookie-viewer {
+.cookie-viewer,
+.cookie-editor {
     display: grid;
     gap: 8px;
     width: 100%;
@@ -206,7 +208,8 @@ p {
     box-shadow: 0 8px 24px rgba(71, 35, 17, 0.06);
 }
 
-.cookie-viewer h2 {
+.cookie-viewer h2,
+.cookie-editor h2 {
     font-size: 15px;
     line-height: 1.35;
 }
@@ -252,13 +255,72 @@ thead th {
 }
 
 tbody th {
-    width: 36%;
+    width: 32%;
     font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
     font-weight: 650;
 }
 
 tbody td {
     font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+thead th:last-child,
+tbody td:last-child {
+    width: 64px;
+}
+
+.edit-cookie-button {
+    min-height: 30px;
+    padding: 5px 7px;
+    border-color: var(--border);
+    border-radius: 8px;
+    background: var(--card);
+    color: var(--text);
+    font-size: 11px;
+}
+
+.cookie-editor {
+    text-align: left;
+}
+
+.cookie-editor form {
+    display: grid;
+    gap: 6px;
+}
+
+.cookie-editor label {
+    color: var(--muted);
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.cookie-editor input,
+.cookie-editor textarea {
+    width: 100%;
+    padding: 8px 9px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    background: var(--background);
+    color: var(--text);
+    font: 12px/1.35 ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+
+.cookie-editor textarea {
+    min-height: 76px;
+    resize: vertical;
+}
+
+.cookie-editor input:focus-visible,
+.cookie-editor textarea:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 35%, transparent);
+    outline-offset: 2px;
+}
+
+.editor-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    margin-top: 3px;
 }
 
 tbody tr:last-child th,
@@ -331,6 +393,10 @@ button:disabled {
     font-size: 13px;
     line-height: 1.4;
     text-align: center;
+}
+
+.action-notice[data-state="success"] {
+    color: var(--success);
 }
 
 @keyframes spin {

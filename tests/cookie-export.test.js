@@ -328,9 +328,13 @@ test("creates deterministic key and value rows for the cookie viewer", () => {
     ]);
 
     assert.deepEqual(rows, [
-        {key: "session", value: "root-session"},
-        {key: "session", value: "<script>not markup</script>"},
-        {key: "theme", value: "warm"}
+        {key: "session", value: "root-session", sourceIndex: 2},
+        {
+            key: "session",
+            value: "<script>not markup</script>",
+            sourceIndex: 1
+        },
+        {key: "theme", value: "warm", sourceIndex: 0}
     ]);
     assert.deepEqual(createCookieDisplayRows(undefined), []);
 });

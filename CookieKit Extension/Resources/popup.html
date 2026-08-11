@@ -21,7 +21,8 @@
                 />
             </svg>
             <p data-i18n="security_warning">
-                Cookies can grant account access. Share only with trusted destinations.
+                Cookies can grant account access. Import and share only with trusted
+                sources and destinations.
             </p>
         </aside>
 
@@ -74,6 +75,25 @@
                 </svg>
                 <span id="copy-label" data-i18n="copy_button">Copy cookies</span>
             </button>
+            <button id="import-button" class="secondary" type="button" disabled>
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                    <path
+                        d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 13v6.5h14V13"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                    />
+                </svg>
+                <span data-i18n="import_button">Import cookies</span>
+            </button>
+            <input
+                id="import-file-input"
+                type="file"
+                accept=".json,.txt,application/json,text/plain"
+                hidden
+            >
             <button
                 id="show-cookies-button"
                 class="secondary"
@@ -113,11 +133,46 @@
                         <tr>
                             <th scope="col" data-i18n="cookie_key_header">Key</th>
                             <th scope="col" data-i18n="cookie_value_header">Value</th>
+                            <th scope="col" data-i18n="cookie_action_header">Action</th>
                         </tr>
                     </thead>
                     <tbody id="cookie-table-body"></tbody>
                 </table>
             </div>
+        </section>
+
+        <section
+            id="cookie-editor"
+            class="cookie-editor"
+            aria-labelledby="cookie-editor-title"
+            hidden
+        >
+            <h2 id="cookie-editor-title" data-i18n="edit_cookie_title">
+                Edit cookie
+            </h2>
+            <form id="cookie-editor-form">
+                <label for="cookie-name-input" data-i18n="cookie_name_label">
+                    Name
+                </label>
+                <input id="cookie-name-input" name="name" type="text" autocomplete="off">
+                <label for="cookie-value-input" data-i18n="cookie_value_label">
+                    Value
+                </label>
+                <textarea
+                    id="cookie-value-input"
+                    name="value"
+                    rows="4"
+                    autocomplete="off"
+                ></textarea>
+                <div class="editor-actions">
+                    <button id="save-cookie-button" class="primary" type="submit">
+                        <span data-i18n="save_cookie_button">Save cookie</span>
+                    </button>
+                    <button id="cancel-edit-button" class="secondary" type="button">
+                        <span data-i18n="cancel_button">Cancel</span>
+                    </button>
+                </div>
+            </form>
         </section>
 
         <p id="action-notice" class="action-notice" role="status" hidden></p>
