@@ -4,16 +4,16 @@
         "description": "The display name for the extension."
     },
     "extension_description": {
-        "message": "Export cookies for the current Safari page in Netscape cookies.txt or JSON format.",
+        "message": "Import, edit, and export cookies for the current Safari page.",
         "description": "Description of what the extension does."
     },
     "popup_title": {
-        "message": "Export cookies",
+        "message": "Manage cookies",
         "description": "Popup heading."
     },
     "security_warning": {
-        "message": "Cookies can grant account access. Share only with trusted destinations.",
-        "description": "Warning shown before cookies can be exported."
+        "message": "Cookies can grant account access. Import and share only with trusted sources and destinations.",
+        "description": "Warning shown before cookies can be imported or exported."
     },
     "loading_title": {
         "message": "Reading this page’s cookies…",
@@ -81,6 +81,10 @@
         "message": "Copy cookies",
         "description": "Secondary export action."
     },
+    "import_button": {
+        "message": "Import cookies",
+        "description": "Action that opens a cookie file for import."
+    },
     "show_cookies_button": {
         "message": "Show cookies",
         "description": "Action that reveals cookie names and values."
@@ -100,6 +104,34 @@
     "cookie_value_header": {
         "message": "Value",
         "description": "Header for the cookie-value column."
+    },
+    "cookie_action_header": {
+        "message": "Action",
+        "description": "Header for cookie row actions."
+    },
+    "edit_cookie_button": {
+        "message": "Edit",
+        "description": "Action that opens a cookie for editing."
+    },
+    "edit_cookie_title": {
+        "message": "Edit cookie",
+        "description": "Heading above the cookie editing form."
+    },
+    "cookie_name_label": {
+        "message": "Name",
+        "description": "Label for an editable cookie name."
+    },
+    "cookie_value_label": {
+        "message": "Value",
+        "description": "Label for an editable cookie value."
+    },
+    "save_cookie_button": {
+        "message": "Save cookie",
+        "description": "Action that saves cookie edits."
+    },
+    "cancel_button": {
+        "message": "Cancel",
+        "description": "Action that closes the cookie editor without saving."
     },
     "copied_button": {
         "message": "Copied",
@@ -168,5 +200,65 @@
     "copy_failed_body": {
         "message": "Check Safari’s permissions and try again.",
         "description": "Instructions after a clipboard error."
+    },
+    "import_success": {
+        "message": "$COUNT$ cookies imported",
+        "description": "Confirmation after multiple cookies are imported.",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "import_success_one": {
+        "message": "1 cookie imported",
+        "description": "Confirmation after one cookie is imported."
+    },
+    "import_skipped": {
+        "message": "$COUNT$ cookies skipped because they were invalid, expired, unrelated to this website, or rejected by Safari.",
+        "description": "Details after some imported cookies are skipped.",
+        "placeholders": {
+            "count": {
+                "content": "$1",
+                "example": "2"
+            }
+        }
+    },
+    "import_skipped_one": {
+        "message": "1 cookie was skipped because it was invalid, expired, unrelated to this website, or rejected by Safari.",
+        "description": "Details after one imported cookie is skipped."
+    },
+    "import_none_title": {
+        "message": "No cookies were imported",
+        "description": "Status when an import contains no usable cookies."
+    },
+    "import_none_body": {
+        "message": "Choose a valid CookieKit JSON or Netscape cookies.txt file for this website.",
+        "description": "Instructions after an import has no usable cookies."
+    },
+    "import_failed_title": {
+        "message": "The file could not be imported",
+        "description": "Status when a cookie import file cannot be parsed."
+    },
+    "import_failed_body": {
+        "message": "Choose a valid JSON or Netscape cookies.txt file and try again.",
+        "description": "Instructions after a cookie import parsing error."
+    },
+    "edit_success_title": {
+        "message": "Cookie updated",
+        "description": "Confirmation after a cookie is edited."
+    },
+    "edit_success_body": {
+        "message": "Safari saved the new name and value for this website.",
+        "description": "Details after a cookie edit succeeds."
+    },
+    "edit_failed_title": {
+        "message": "The cookie could not be updated",
+        "description": "Status after a cookie edit fails."
+    },
+    "edit_failed_body": {
+        "message": "Check the name, Safari permissions, and website access, then try again.",
+        "description": "Instructions after a cookie edit fails."
     }
 }
