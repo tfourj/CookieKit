@@ -103,10 +103,10 @@ code {
     width: min(760px, 100%);
     margin: 0 auto;
     padding:
-        max(38px, env(safe-area-inset-top))
-        max(22px, env(safe-area-inset-right))
-        max(38px, env(safe-area-inset-bottom))
-        max(22px, env(safe-area-inset-left));
+        calc(38px + env(safe-area-inset-top))
+        calc(22px + env(safe-area-inset-right))
+        calc(38px + env(safe-area-inset-bottom))
+        calc(22px + env(safe-area-inset-left));
 }
 
 .hero {
@@ -460,8 +460,8 @@ footer {
 
     .onboarding,
     .policy {
-        padding-right: max(18px, env(safe-area-inset-right));
-        padding-left: max(18px, env(safe-area-inset-left));
+        padding-right: calc(18px + env(safe-area-inset-right));
+        padding-left: calc(18px + env(safe-area-inset-left));
     }
 }
 

@@ -45,6 +45,7 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         super.viewDidLoad()
 
         webView.navigationDelegate = self
+        webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.scrollView.isScrollEnabled = true
         webView.scrollView.alwaysBounceVertical = true
 
