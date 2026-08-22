@@ -83,6 +83,25 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         refreshExtensionState()
     }
 
+    func webView(
+        _ webView: WKWebView,
+        decidePolicyFor navigationAction: WKNavigationAction,
+        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+    ) {
+        guard
+            navigationAction.navigationType == .linkActivated,
+            let url = navigationAction.request.url,
+            let scheme = url.scheme?.lowercased(),
+            scheme == "http" || scheme == "https"
+        else {
+            decisionHandler(.allow)
+            return
+        }
+
+        present(SFSafariViewController(url: url), animated: true)
+        decisionHandler(.cancel)
+    }
+
     func userContentController(
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
