@@ -48,6 +48,19 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.scrollView.isScrollEnabled = true
         webView.scrollView.alwaysBounceVertical = true
+        webView.underPageBackgroundColor = UIColor { traitCollection in
+            let components: (CGFloat, CGFloat, CGFloat) =
+                traitCollection.userInterfaceStyle == .dark
+                    ? (29, 18, 13)
+                    : (255, 249, 243)
+
+            return UIColor(
+                red: components.0 / 255,
+                green: components.1 / 255,
+                blue: components.2 / 255,
+                alpha: 1
+            )
+        }
 
         webView.configuration.userContentController.add(
             scriptMessageHandler,

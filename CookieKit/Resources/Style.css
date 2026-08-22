@@ -26,6 +26,12 @@
     --warning-background: #fff0c8;
     --warning-border: #e4bb54;
     --warning-text: #583900;
+    --page-background:
+        linear-gradient(to bottom, var(--background), transparent 128px),
+        linear-gradient(to top, var(--background), transparent 128px),
+        radial-gradient(circle at top right, rgba(246, 173, 85, 0.2), transparent 38%),
+        radial-gradient(circle at bottom left, rgba(168, 67, 25, 0.08), transparent 34%),
+        var(--background);
 }
 
 html,
@@ -33,12 +39,13 @@ body {
     min-height: 100%;
 }
 
+html {
+    background: var(--page-background);
+}
+
 body {
     margin: 0;
-    background:
-        radial-gradient(circle at top right, rgba(246, 173, 85, 0.2), transparent 38%),
-        radial-gradient(circle at bottom left, rgba(168, 67, 25, 0.08), transparent 34%),
-        var(--background);
+    background: transparent;
     color: var(--text);
     font-size: 17px;
     line-height: 1.5;
