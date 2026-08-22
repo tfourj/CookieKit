@@ -48,6 +48,9 @@ final class ViewController: UIViewController, WKNavigationDelegate, WKScriptMess
         webView.scrollView.contentInsetAdjustmentBehavior = .never
         webView.scrollView.isScrollEnabled = true
         webView.scrollView.alwaysBounceVertical = true
+        webView.scrollView.minimumZoomScale = 1
+        webView.scrollView.maximumZoomScale = 1
+        webView.scrollView.pinchGestureRecognizer?.isEnabled = false
         webView.underPageBackgroundColor = UIColor { traitCollection in
             let components: (CGFloat, CGFloat, CGFloat) =
                 traitCollection.userInterfaceStyle == .dark
