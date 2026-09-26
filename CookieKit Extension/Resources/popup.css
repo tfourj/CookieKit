@@ -242,7 +242,7 @@ p {
 }
 
 .cookie-table-scroll {
-    max-height: 200px;
+    max-height: clamp(300px, 55vh, 440px);
     overflow: auto;
     border: 1px solid var(--border);
     border-radius: 10px;
