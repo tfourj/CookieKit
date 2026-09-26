@@ -5,9 +5,12 @@ export function runStorageOperation(operation, expectedOrigin, key, value) {
 
     const storage = window.localStorage;
 
-    if (operation === "set") {
+    if (operation === "set" || operation === "add") {
         if (typeof key !== "string" || typeof value !== "string") {
             throw new TypeError("A storage key and value must be strings");
+        }
+        if (operation === "add" && storage.getItem(key) !== null) {
+            throw new Error("A local storage entry already uses this key");
         }
         storage.setItem(key, value);
     } else if (operation === "remove") {

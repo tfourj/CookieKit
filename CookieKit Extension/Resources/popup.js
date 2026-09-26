@@ -9,6 +9,7 @@ import {
     createCookieSetDetails,
     parseCookieImport
 } from "./cookie-import.js";
+import {runStorageOperation} from "./page-storage.js";
 
 const statusCard = document.querySelector("#status");
 const statusTitle = document.querySelector("#status-title");
@@ -31,6 +32,24 @@ const cookieValueInput = document.querySelector("#cookie-value-input");
 const saveCookieButton = document.querySelector("#save-cookie-button");
 const cancelEditButton = document.querySelector("#cancel-edit-button");
 const actionNotice = document.querySelector("#action-notice");
+const cookiesTab = document.querySelector("#cookies-tab");
+const localStorageTab = document.querySelector("#local-storage-tab");
+const cookiesPanel = document.querySelector("#cookies-panel");
+const localStoragePanel = document.querySelector("#local-storage-panel");
+const storageStatus = document.querySelector("#storage-status");
+const storageStatusTitle = document.querySelector("#storage-status-title");
+const storageStatusBody = document.querySelector("#storage-status-body");
+const addStorageButton = document.querySelector("#add-storage-button");
+const storageViewer = document.querySelector("#storage-viewer");
+const storageTableBody = document.querySelector("#storage-table-body");
+const storageEditor = document.querySelector("#storage-editor");
+const storageEditorTitle = document.querySelector("#storage-editor-title");
+const storageEditorForm = document.querySelector("#storage-editor-form");
+const storageKeyInput = document.querySelector("#storage-key-input");
+const storageValueInput = document.querySelector("#storage-value-input");
+const saveStorageButton = document.querySelector("#save-storage-button");
+const cancelStorageButton = document.querySelector("#cancel-storage-button");
+const storageNotice = document.querySelector("#storage-notice");
 
 let preparedExport = null;
 let preparedFile = null;
@@ -41,6 +60,12 @@ let sourcePageURL = null;
 let sourceStoreId = null;
 let exportGeneratedAt = null;
 let editingCookie = null;
+let storageEntries = [];
+let storageOrigin = null;
+let storageTabId = null;
+let storageRequestId = 0;
+let editingStorageKey = null;
+let storageBusy = false;
 
 function message(key, substitutions) {
     return browser.i18n.getMessage(key, substitutions);
@@ -54,6 +79,10 @@ function localizeDocument() {
         if (localizedMessage) {
             element.textContent = localizedMessage;
         }
+    }
+
+    for (const element of document.querySelectorAll("[data-i18n-aria-label]")) {
+        element.setAttribute("aria-label", message(element.dataset.i18nAriaLabel));
     }
 }
 
@@ -339,6 +368,240 @@ async function prepareCurrentPageExport() {
         }
     }
 }
+
+function setStorageStatus(state, titleKey, bodyKey, count, bodySubstitution) {
+    storageStatus.dataset.state = state;
+    storageStatusTitle.textContent = message(titleKey, count);
+    storageStatusBody.textContent = message(bodyKey, bodySubstitution);
+}
+
+function setStorageNotice(key, state = "error") {
+    storageNotice.hidden = !key;
+    storageNotice.textContent = key ? message(key) : "";
+    storageNotice.dataset.state = state;
+}
+
+function closeStorageEditor() {
+    editingStorageKey = null;
+    storageEditor.hidden = true;
+    storageEditorForm.reset();
+}
+
+function openStorageEditor(key = null) {
+    editingStorageKey = key;
+    storageEditorTitle.textContent = message(key === null ? "add_storage_title" : "edit_storage_title");
+    storageKeyInput.readOnly = key !== null;
+    storageKeyInput.value = key ?? "";
+    storageValueInput.value = key === null
+        ? ""
+        : storageEntries.find((entry) => entry.key === key)?.value ?? "";
+    storageEditor.hidden = false;
+    (key === null ? storageKeyInput : storageValueInput).focus();
+}
+
+function renderStorageEntries(entries) {
+    storageEntries = entries;
+    const fragment = document.createDocumentFragment();
+
+    for (const [index, entry] of entries.entries()) {
+        const row = document.createElement("tr");
+        const keyCell = document.createElement("th");
+        const valueCell = document.createElement("td");
+        const actionCell = document.createElement("td");
+        const actions = document.createElement("div");
+        keyCell.scope = "row";
+        keyCell.textContent = entry.key;
+        valueCell.textContent = entry.value;
+        actions.className = "storage-row-actions";
+
+        for (const [action, label] of [
+            ["edit", "edit_cookie_button"],
+            ["delete", "delete_storage_button"]
+        ]) {
+            const button = document.createElement("button");
+            button.type = "button";
+            button.dataset.action = action;
+            button.dataset.index = String(index);
+            button.textContent = message(label);
+            button.setAttribute("aria-label", `${message(label)}: ${entry.key}`);
+            actions.append(button);
+        }
+
+        actionCell.append(actions);
+        row.append(keyCell, valueCell, actionCell);
+        fragment.append(row);
+    }
+
+    storageTableBody.replaceChildren(fragment);
+    storageViewer.hidden = entries.length === 0;
+    const titleKey = entries.length === 1 ? "storage_ready_one" : "storage_ready_title";
+    setStorageStatus(
+        entries.length ? "ready" : "empty",
+        entries.length ? titleKey : "storage_empty_title",
+        entries.length ? "storage_ready_body" : "storage_empty_body",
+        String(entries.length),
+        storageOrigin
+    );
+}
+
+function showStorageError(titleKey, bodyKey) {
+    storageOrigin = null;
+    storageTabId = null;
+    storageEntries = [];
+    storageTableBody.replaceChildren();
+    storageViewer.hidden = true;
+    addStorageButton.disabled = true;
+    closeStorageEditor();
+    setStorageStatus("error", titleKey, bodyKey);
+}
+
+async function executeStorageOperation(tabId, origin, operation, key, value) {
+    const results = await browser.scripting.executeScript({
+        target: {tabId, frameIds: [0]},
+        func: runStorageOperation,
+        args: [operation, origin, key, value]
+    });
+    const result = results.find((item) => item.frameId === 0) ?? results[0];
+    if (result?.error) {
+        throw new Error(result.error.message);
+    }
+    if (result?.result?.origin !== origin || !Array.isArray(result.result.entries)) {
+        throw new Error("Safari did not return local storage for this page");
+    }
+    return result.result.entries;
+}
+
+async function loadLocalStorage() {
+    const requestId = ++storageRequestId;
+    addStorageButton.disabled = true;
+    closeStorageEditor();
+    setStorageNotice();
+    storageTableBody.replaceChildren();
+    storageViewer.hidden = true;
+    setStorageStatus("loading", "storage_loading_title", "storage_loading_body");
+
+    try {
+        const [tab] = await browser.tabs.query({active: true, currentWindow: true});
+        if (tab?.id === undefined || !tab.url) {
+            throw new Error("Current tab unavailable");
+        }
+        const pageURL = new URL(tab.url);
+        if (!isSupportedPage(pageURL)) {
+            if (requestId === storageRequestId) {
+                showStorageError("unsupported_title", "unsupported_body");
+            }
+            return;
+        }
+
+        const entries = await executeStorageOperation(tab.id, pageURL.origin, "list");
+        if (requestId !== storageRequestId) {
+            return;
+        }
+        storageTabId = tab.id;
+        storageOrigin = pageURL.origin;
+        addStorageButton.disabled = false;
+        renderStorageEntries(entries);
+    } catch (error) {
+        if (requestId === storageRequestId) {
+            showStorageError(
+                isPermissionError(error) ? "permission_title" : "storage_error_title",
+                isPermissionError(error) ? "permission_body" : "storage_error_body"
+            );
+        }
+    }
+}
+
+async function changeLocalStorage(operation, key, value) {
+    if (storageBusy || storageTabId === null || storageOrigin === null) {
+        return;
+    }
+    storageBusy = true;
+    saveStorageButton.disabled = true;
+    cancelStorageButton.disabled = true;
+    addStorageButton.disabled = true;
+    setStorageNotice();
+
+    try {
+        const [tab] = await browser.tabs.query({active: true, currentWindow: true});
+        if (tab?.id !== storageTabId || new URL(tab.url).origin !== storageOrigin) {
+            throw new Error("The active page changed");
+        }
+        const entries = await executeStorageOperation(storageTabId, storageOrigin, operation, key, value);
+        renderStorageEntries(entries);
+        closeStorageEditor();
+        setStorageNotice(operation === "remove" ? "storage_deleted" : "storage_saved", "success");
+    } catch (error) {
+        setStorageNotice(error?.message?.includes("already uses")
+            ? "storage_duplicate" : "storage_write_failed");
+    } finally {
+        storageBusy = false;
+        saveStorageButton.disabled = false;
+        cancelStorageButton.disabled = false;
+        addStorageButton.disabled = storageOrigin === null;
+    }
+}
+
+function selectStorageTab(tab) {
+    const showLocalStorage = tab === localStorageTab;
+    cookiesTab.setAttribute("aria-selected", String(!showLocalStorage));
+    localStorageTab.setAttribute("aria-selected", String(showLocalStorage));
+    cookiesTab.tabIndex = showLocalStorage ? -1 : 0;
+    localStorageTab.tabIndex = showLocalStorage ? 0 : -1;
+    cookiesPanel.hidden = showLocalStorage;
+    localStoragePanel.hidden = !showLocalStorage;
+    if (showLocalStorage) {
+        loadLocalStorage();
+    } else {
+        storageRequestId += 1;
+    }
+}
+
+for (const tab of [cookiesTab, localStorageTab]) {
+    tab.addEventListener("click", () => {
+        if (tab.getAttribute("aria-selected") !== "true") {
+            selectStorageTab(tab);
+        }
+    });
+    tab.addEventListener("keydown", (event) => {
+        if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") {
+            return;
+        }
+        event.preventDefault();
+        const nextTab = tab === cookiesTab ? localStorageTab : cookiesTab;
+        selectStorageTab(nextTab);
+        nextTab.focus();
+    });
+}
+
+addStorageButton.addEventListener("click", () => {
+    setStorageNotice();
+    openStorageEditor();
+});
+
+storageTableBody.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-action]");
+    if (!button || storageBusy) {
+        return;
+    }
+    const entry = storageEntries[Number(button.dataset.index)];
+    if (!entry) {
+        return;
+    }
+    if (button.dataset.action === "edit") {
+        setStorageNotice();
+        openStorageEditor(entry.key);
+    } else if (button.dataset.action === "delete") {
+        changeLocalStorage("remove", entry.key);
+    }
+});
+
+cancelStorageButton.addEventListener("click", closeStorageEditor);
+
+storageEditorForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const operation = editingStorageKey === null ? "add" : "set";
+    changeLocalStorage(operation, storageKeyInput.value, storageValueInput.value);
+});
 
 exportButton.addEventListener("click", async () => {
     if (!preparedFile || !supportsFileSharing(preparedFile)) {

@@ -4,11 +4,11 @@
         "description": "The display name for the extension."
     },
     "extension_description": {
-        "message": "Import, edit, and export cookies for the current Safari page.",
+        "message": "Manage cookies and local storage for the current Safari page.",
         "description": "Description of what the extension does."
     },
     "popup_title": {
-        "message": "Manage cookies",
+        "message": "Manage website data",
         "description": "Popup heading."
     },
     "security_warning": {
@@ -260,5 +260,103 @@
     "edit_failed_body": {
         "message": "Check the name, Safari permissions, and website access, then try again.",
         "description": "Instructions after a cookie edit fails."
+    },
+    "storage_tabs_label": {
+        "message": "Website data type",
+        "description": "Accessible name for the cookie and local storage tabs."
+    },
+    "cookies_tab": {
+        "message": "Cookies",
+        "description": "Tab for cookie management."
+    },
+    "local_storage_tab": {
+        "message": "Local Storage",
+        "description": "Tab for website local storage management."
+    },
+    "storage_warning": {
+        "message": "Local Storage may contain account data. Edit and share values carefully.",
+        "description": "Warning before local storage values are displayed."
+    },
+    "storage_loading_title": {
+        "message": "Reading local storage…",
+        "description": "Status while local storage is being read."
+    },
+    "storage_loading_body": {
+        "message": "CookieKit keeps values in memory only.",
+        "description": "Privacy detail shown while loading local storage."
+    },
+    "storage_ready_title": {
+        "message": "$COUNT$ entries found",
+        "description": "Status after local storage is read.",
+        "placeholders": {
+            "count": {"content": "$1", "example": "12"}
+        }
+    },
+    "storage_ready_one": {
+        "message": "1 entry found",
+        "description": "Status after one local storage entry is read."
+    },
+    "storage_ready_body": {
+        "message": "For $ORIGIN$",
+        "description": "Origin whose local storage is displayed.",
+        "placeholders": {
+            "origin": {"content": "$1", "example": "https://example.com"}
+        }
+    },
+    "storage_empty_title": {
+        "message": "No local storage entries",
+        "description": "Status when the current site has no local storage entries."
+    },
+    "storage_empty_body": {
+        "message": "You can add an entry for this site.",
+        "description": "Hint when local storage is empty."
+    },
+    "storage_error_title": {
+        "message": "Local storage unavailable",
+        "description": "Status when Safari cannot access this page's local storage."
+    },
+    "storage_error_body": {
+        "message": "Check website access in Safari, then try again.",
+        "description": "Instructions after a local storage access error."
+    },
+    "storage_table_title": {
+        "message": "Local Storage for this site",
+        "description": "Heading above local storage entries."
+    },
+    "add_storage_button": {
+        "message": "Add entry",
+        "description": "Action to create a local storage entry."
+    },
+    "add_storage_title": {
+        "message": "Add local storage entry",
+        "description": "Heading above the new local storage entry form."
+    },
+    "edit_storage_title": {
+        "message": "Edit local storage entry",
+        "description": "Heading above the local storage editor."
+    },
+    "save_storage_button": {
+        "message": "Save entry",
+        "description": "Action to save a local storage entry."
+    },
+    "delete_storage_button": {
+        "message": "Delete",
+        "description": "Action to delete a local storage entry."
+    },
+    "storage_saved": {
+        "message": "Local storage entry saved.",
+        "description": "Confirmation after an entry is added or edited."
+    },
+    "storage_deleted": {
+        "message": "Local storage entry deleted.",
+        "description": "Confirmation after an entry is deleted."
+    },
+    "storage_duplicate": {
+        "message": "That key already exists. Edit its entry instead.",
+        "description": "Error after trying to add a duplicate key."
+    },
+    "storage_write_failed": {
+        "message": "The entry could not be changed. Check website access and try again.",
+        "description": "Error after a local storage write fails."
     }
 }

@@ -9,6 +9,16 @@
 </head>
 <body>
     <main>
+        <div class="storage-tabs" role="tablist" aria-label="Storage type" data-i18n-aria-label="storage_tabs_label">
+            <button id="cookies-tab" class="storage-tab" type="button" role="tab"
+                aria-controls="cookies-panel" aria-selected="true" tabindex="0"
+                data-i18n="cookies_tab">Cookies</button>
+            <button id="local-storage-tab" class="storage-tab" type="button" role="tab"
+                aria-controls="local-storage-panel" aria-selected="false" tabindex="-1"
+                data-i18n="local_storage_tab">Local Storage</button>
+        </div>
+
+        <section id="cookies-panel" class="storage-panel" role="tabpanel" aria-labelledby="cookies-tab">
         <aside class="warning" role="note">
             <svg aria-hidden="true" viewBox="0 0 24 24">
                 <path
@@ -176,6 +186,63 @@
         </section>
 
         <p id="action-notice" class="action-notice" role="status" hidden></p>
+        </section>
+
+        <section id="local-storage-panel" class="storage-panel" role="tabpanel"
+            aria-labelledby="local-storage-tab" hidden>
+            <aside class="warning" role="note">
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                    <path d="M12 3.5 21 20H3L12 3.5Zm0 5.5v5.5m0 3v.1" fill="none"
+                        stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+                </svg>
+                <p data-i18n="storage_warning">Local Storage may contain account data. Edit and share values carefully.</p>
+            </aside>
+
+            <section id="storage-status" class="status-card" data-state="loading" aria-live="polite">
+                <span class="status-indicator" aria-hidden="true"></span>
+                <div>
+                    <h2 id="storage-status-title" data-i18n="storage_loading_title">Reading local storage…</h2>
+                    <p id="storage-status-body" data-i18n="loading_body">CookieKit keeps it in memory only.</p>
+                </div>
+            </section>
+
+            <button id="add-storage-button" class="primary" type="button" disabled
+                data-i18n="add_storage_button">Add entry</button>
+
+            <section id="storage-viewer" class="cookie-viewer" aria-labelledby="storage-table-title" hidden>
+                <h2 id="storage-table-title" data-i18n="storage_table_title">Local Storage for this site</h2>
+                <div class="cookie-table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col" data-i18n="cookie_key_header">Key</th>
+                                <th scope="col" data-i18n="cookie_value_header">Value</th>
+                                <th scope="col" data-i18n="cookie_action_header">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="storage-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="storage-editor" class="cookie-editor" aria-labelledby="storage-editor-title" hidden>
+                <h2 id="storage-editor-title" data-i18n="add_storage_title">Add local storage entry</h2>
+                <form id="storage-editor-form">
+                    <label for="storage-key-input" data-i18n="cookie_key_header">Key</label>
+                    <input id="storage-key-input" name="key" type="text" autocomplete="off">
+                    <label for="storage-value-input" data-i18n="cookie_value_header">Value</label>
+                    <textarea id="storage-value-input" name="value" rows="4" autocomplete="off"></textarea>
+                    <div class="editor-actions">
+                        <button id="save-storage-button" class="primary" type="submit"
+                            data-i18n="save_storage_button">Save entry</button>
+                        <button id="cancel-storage-button" class="secondary" type="button"
+                            data-i18n="cancel_button">Cancel</button>
+                    </div>
+                </form>
+            </section>
+
+            <p id="storage-notice" class="action-notice" role="status" hidden></p>
+        </section>
     </main>
 </body>
 </html>

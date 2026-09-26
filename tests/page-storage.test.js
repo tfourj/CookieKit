@@ -37,7 +37,7 @@ test("lists local storage in key order and preserves text values", () => {
 
 test("adds, updates, and removes a key", () => {
     withStorage((values) => {
-        runStorageOperation("set", "https://example.com", "new", "<script>text</script>");
+        runStorageOperation("add", "https://example.com", "new", "<script>text</script>");
         runStorageOperation("set", "https://example.com", "a", "updated");
         assert.equal(values.get("new"), "<script>text</script>");
         assert.equal(values.get("a"), "updated");
@@ -52,5 +52,6 @@ test("rejects a changed page and invalid operations before writing", () => {
         assert.throws(() => runStorageOperation("remove", "https://example.com", 42), /string/);
         assert.throws(() => runStorageOperation("clear", "https://example.com"), /Unsupported/);
         assert.equal(values.get("a"), "first");
+        assert.throws(() => runStorageOperation("add", "https://example.com", "a", "wrong"), /already uses/);
     });
 });
