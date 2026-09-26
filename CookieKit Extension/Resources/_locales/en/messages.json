@@ -274,7 +274,7 @@
         "description": "Tab for website local storage management."
     },
     "storage_warning": {
-        "message": "Local Storage may contain account data. Edit and share values carefully.",
+        "message": "Local Storage may contain account data. Import and share only with trusted sources and destinations.",
         "description": "Warning before local storage values are displayed."
     },
     "storage_loading_title": {
@@ -342,6 +342,60 @@
     "delete_storage_button": {
         "message": "Delete",
         "description": "Action to delete a local storage entry."
+    },
+    "storage_export_button": {
+        "message": "Export JSON",
+        "description": "Action to share local storage entries as a JSON file."
+    },
+    "storage_copy_button": {
+        "message": "Copy JSON",
+        "description": "Action to copy local storage entries as JSON."
+    },
+    "storage_import_button": {
+        "message": "Import JSON",
+        "description": "Action to select a local storage JSON file."
+    },
+    "storage_imported": {
+        "message": "$COUNT$ entries imported.",
+        "description": "Confirmation after multiple local storage entries are imported.",
+        "placeholders": {
+            "count": {"content": "$1", "example": "12"}
+        }
+    },
+    "storage_imported_one": {
+        "message": "1 entry imported.",
+        "description": "Confirmation after one local storage entry is imported."
+    },
+    "storage_import_none": {
+        "message": "No entries were imported.",
+        "description": "Status when a local storage import has no usable entries."
+    },
+    "storage_skipped": {
+        "message": "$COUNT$ entries skipped because they were invalid, duplicated, or rejected by Safari.",
+        "description": "Details after multiple local storage entries are skipped.",
+        "placeholders": {
+            "count": {"content": "$1", "example": "2"}
+        }
+    },
+    "storage_skipped_one": {
+        "message": "1 entry skipped because it was invalid, duplicated, or rejected by Safari.",
+        "description": "Details after one local storage entry is skipped."
+    },
+    "storage_import_failed": {
+        "message": "The JSON file could not be imported. Choose a valid local storage entry array.",
+        "description": "Error after a local storage import file cannot be used."
+    },
+    "storage_share_unavailable": {
+        "message": "File sharing is unavailable. Use Copy JSON instead.",
+        "description": "Fallback when local storage file sharing is unavailable."
+    },
+    "storage_share_failed": {
+        "message": "The JSON file could not be shared. Try again or use Copy JSON.",
+        "description": "Error after local storage file sharing fails."
+    },
+    "storage_copy_failed": {
+        "message": "The JSON could not be copied. Check Safari permissions and try again.",
+        "description": "Error after copying local storage JSON fails."
     },
     "storage_saved": {
         "message": "Local storage entry saved.",

@@ -196,7 +196,8 @@
                         stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
                 </svg>
                 <p data-i18n="storage_warning">
-                    Local Storage may contain account data. Edit and share values carefully.
+                    Local Storage may contain account data. Import and share only
+                    with trusted sources and destinations.
                 </p>
             </aside>
 
@@ -207,6 +208,19 @@
                     <p id="storage-status-body" data-i18n="loading_body">CookieKit keeps it in memory only.</p>
                 </div>
             </section>
+
+            <div class="actions">
+                <button id="storage-export-button" class="primary" type="button" disabled>
+                    <span data-i18n="storage_export_button">Export JSON</span>
+                </button>
+                <button id="storage-copy-button" class="secondary" type="button" disabled>
+                    <span id="storage-copy-label" data-i18n="storage_copy_button">Copy JSON</span>
+                </button>
+                <button id="storage-import-button" class="secondary" type="button" disabled>
+                    <span data-i18n="storage_import_button">Import JSON</span>
+                </button>
+                <input id="storage-import-file-input" type="file" accept=".json,application/json" hidden>
+            </div>
 
             <button id="add-storage-button" class="primary" type="button" disabled
                 data-i18n="add_storage_button">Add entry</button>

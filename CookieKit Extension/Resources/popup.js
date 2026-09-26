@@ -10,6 +10,7 @@ import {
     parseCookieImport
 } from "./cookie-import.js";
 import {runStorageOperation} from "./page-storage.js";
+import {createStorageJsonExport, parseStorageJson} from "./storage-json.js";
 
 const statusCard = document.querySelector("#status");
 const statusTitle = document.querySelector("#status-title");
@@ -39,6 +40,11 @@ const localStoragePanel = document.querySelector("#local-storage-panel");
 const storageStatus = document.querySelector("#storage-status");
 const storageStatusTitle = document.querySelector("#storage-status-title");
 const storageStatusBody = document.querySelector("#storage-status-body");
+const storageExportButton = document.querySelector("#storage-export-button");
+const storageCopyButton = document.querySelector("#storage-copy-button");
+const storageCopyLabel = document.querySelector("#storage-copy-label");
+const storageImportButton = document.querySelector("#storage-import-button");
+const storageImportFileInput = document.querySelector("#storage-import-file-input");
 const addStorageButton = document.querySelector("#add-storage-button");
 const storageViewer = document.querySelector("#storage-viewer");
 const storageTableBody = document.querySelector("#storage-table-body");
@@ -66,6 +72,8 @@ let storageTabId = null;
 let storageRequestId = 0;
 let editingStorageKey = null;
 let storageBusy = false;
+let preparedStorageExport = null;
+let preparedStorageFile = null;
 
 function message(key, substitutions) {
     return browser.i18n.getMessage(key, substitutions);
@@ -381,6 +389,41 @@ function setStorageNotice(key, state = "error") {
     storageNotice.dataset.state = state;
 }
 
+function showStorageImportNotice(importedCount, skippedCount) {
+    const importedKey = importedCount === 0
+        ? "storage_import_none"
+        : importedCount === 1 ? "storage_imported_one" : "storage_imported";
+    let notice = message(importedKey, String(importedCount));
+    if (skippedCount > 0) {
+        const skippedKey = skippedCount === 1 ? "storage_skipped_one" : "storage_skipped";
+        notice += ` ${message(skippedKey, String(skippedCount))}`;
+    }
+    storageNotice.textContent = notice;
+    storageNotice.dataset.state = importedCount ? "success" : "error";
+    storageNotice.hidden = false;
+}
+
+function updateStorageControls() {
+    const available = storageOrigin !== null && !storageBusy;
+    addStorageButton.disabled = !available;
+    storageImportButton.disabled = !available;
+    storageExportButton.disabled = !available || !preparedStorageFile;
+    storageCopyButton.disabled = !available || !preparedStorageExport;
+}
+
+function prepareStorageExport() {
+    preparedStorageExport = createStorageJsonExport(
+        storageEntries,
+        new URL(storageOrigin).hostname
+    );
+    preparedStorageFile = new File(
+        [preparedStorageExport.contents],
+        preparedStorageExport.filename,
+        {type: "application/json"}
+    );
+    updateStorageControls();
+}
+
 function closeStorageEditor() {
     editingStorageKey = null;
     storageEditor.hidden = true;
@@ -434,6 +477,7 @@ function renderStorageEntries(entries) {
 
     storageTableBody.replaceChildren(fragment);
     storageViewer.hidden = entries.length === 0;
+    prepareStorageExport();
     const titleKey = entries.length === 1 ? "storage_ready_one" : "storage_ready_title";
     setStorageStatus(
         entries.length ? "ready" : "empty",
@@ -450,7 +494,9 @@ function showStorageError(titleKey, bodyKey) {
     storageEntries = [];
     storageTableBody.replaceChildren();
     storageViewer.hidden = true;
-    addStorageButton.disabled = true;
+    preparedStorageExport = null;
+    preparedStorageFile = null;
+    updateStorageControls();
     closeStorageEditor();
     setStorageStatus("error", titleKey, bodyKey);
 }
@@ -468,12 +514,16 @@ async function executeStorageOperation(tabId, origin, operation, key, value) {
     if (result?.result?.origin !== origin || !Array.isArray(result.result.entries)) {
         throw new Error("Safari did not return local storage for this page");
     }
-    return result.result.entries;
+    return result.result;
 }
 
 async function loadLocalStorage() {
     const requestId = ++storageRequestId;
-    addStorageButton.disabled = true;
+    preparedStorageExport = null;
+    preparedStorageFile = null;
+    storageOrigin = null;
+    storageTabId = null;
+    updateStorageControls();
     closeStorageEditor();
     setStorageNotice();
     storageTableBody.replaceChildren();
@@ -493,14 +543,13 @@ async function loadLocalStorage() {
             return;
         }
 
-        const entries = await executeStorageOperation(tab.id, pageURL.origin, "list");
+        const result = await executeStorageOperation(tab.id, pageURL.origin, "list");
         if (requestId !== storageRequestId) {
             return;
         }
         storageTabId = tab.id;
         storageOrigin = pageURL.origin;
-        addStorageButton.disabled = storageBusy;
-        renderStorageEntries(entries);
+        renderStorageEntries(result.entries);
     } catch (error) {
         if (requestId === storageRequestId) {
             showStorageError(
@@ -511,7 +560,7 @@ async function loadLocalStorage() {
     }
 }
 
-async function changeLocalStorage(operation, key, value) {
+async function changeLocalStorage(operation, key, value, omittedCount = 0) {
     if (storageBusy || storageTabId === null || storageOrigin === null) {
         return;
     }
@@ -521,7 +570,7 @@ async function changeLocalStorage(operation, key, value) {
     storageBusy = true;
     saveStorageButton.disabled = true;
     cancelStorageButton.disabled = true;
-    addStorageButton.disabled = true;
+    updateStorageControls();
     setStorageNotice();
 
     try {
@@ -529,27 +578,31 @@ async function changeLocalStorage(operation, key, value) {
         if (tab?.id !== tabId || new URL(tab.url).origin !== origin) {
             throw new Error("The active page changed");
         }
-        const entries = await executeStorageOperation(tabId, origin, operation, key, value);
+        const result = await executeStorageOperation(tabId, origin, operation, key, value);
         if (requestId === storageRequestId) {
-            renderStorageEntries(entries);
+            renderStorageEntries(result.entries);
             closeStorageEditor();
-            setStorageNotice(operation === "remove" ? "storage_deleted" : "storage_saved", "success");
+            if (operation === "import") {
+                showStorageImportNotice(result.importedCount, omittedCount + result.skippedCount);
+            } else {
+                setStorageNotice(operation === "remove" ? "storage_deleted" : "storage_saved", "success");
+            }
         }
     } catch (error) {
         if (requestId === storageRequestId) {
-            setStorageNotice(error?.message?.includes("already uses")
-                ? "storage_duplicate" : "storage_write_failed");
+            const errorKey = operation === "import"
+                ? "storage_import_failed"
+                : error?.message?.includes("already uses") ? "storage_duplicate" : "storage_write_failed";
+            setStorageNotice(errorKey);
         }
     } finally {
         storageBusy = false;
         saveStorageButton.disabled = false;
         cancelStorageButton.disabled = false;
-        addStorageButton.disabled = storageOrigin === null;
+        updateStorageControls();
         if (
             requestId !== storageRequestId
             && localStorageTab.getAttribute("aria-selected") === "true"
-            && storageTabId === tabId
-            && storageOrigin === origin
         ) {
             loadLocalStorage();
         }
@@ -616,6 +669,75 @@ storageEditorForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const operation = editingStorageKey === null ? "add" : "set";
     changeLocalStorage(operation, storageKeyInput.value, storageValueInput.value);
+});
+
+storageExportButton.addEventListener("click", async () => {
+    if (!preparedStorageFile || !supportsFileSharing(preparedStorageFile)) {
+        setStorageNotice("storage_share_unavailable");
+        return;
+    }
+
+    try {
+        await navigator.share({files: [preparedStorageFile], title: preparedStorageFile.name});
+        setStorageNotice();
+    } catch (error) {
+        if (error?.name !== "AbortError") {
+            setStorageNotice("storage_share_failed");
+        }
+    }
+});
+
+storageCopyButton.addEventListener("click", async () => {
+    if (!preparedStorageExport) {
+        return;
+    }
+
+    try {
+        await navigator.clipboard.writeText(preparedStorageExport.contents);
+        storageCopyLabel.textContent = message("copied_button");
+        setStorageNotice();
+        window.setTimeout(() => {
+            storageCopyLabel.textContent = message("storage_copy_button");
+        }, 1600);
+    } catch {
+        setStorageNotice("storage_copy_failed");
+    }
+});
+
+storageImportButton.addEventListener("click", () => {
+    storageImportFileInput.click();
+});
+
+storageImportFileInput.addEventListener("change", async () => {
+    const file = storageImportFileInput.files?.[0];
+    if (!file || storageOrigin === null || localStorageTab.getAttribute("aria-selected") !== "true") {
+        storageImportFileInput.value = "";
+        return;
+    }
+
+    const requestId = storageRequestId;
+    storageBusy = true;
+    updateStorageControls();
+    try {
+        const parsed = parseStorageJson(await file.text());
+        if (requestId !== storageRequestId) {
+            return;
+        }
+        if (parsed.entries.length === 0) {
+            showStorageImportNotice(0, parsed.omittedCount);
+            return;
+        }
+        storageBusy = false;
+        await changeLocalStorage("import", parsed.entries, undefined, parsed.omittedCount);
+    } catch {
+        if (requestId === storageRequestId) {
+            setStorageNotice("storage_import_failed");
+        }
+    } finally {
+        storageBusy = false;
+        storageImportFileInput.value = "";
+        updateStorageControls();
+    }
 });
 
 exportButton.addEventListener("click", async () => {

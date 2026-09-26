@@ -219,7 +219,8 @@ p {
 }
 
 #import-button,
-#show-cookies-button {
+#show-cookies-button,
+#storage-import-button {
     grid-column: 1 / -1;
 }
 
