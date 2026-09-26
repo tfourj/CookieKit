@@ -22,7 +22,8 @@
     "permissions": [
         "activeTab",
         "clipboardWrite",
-        "cookies"
+        "cookies",
+        "scripting"
     ],
     "host_permissions": [
         "http://*/*",
