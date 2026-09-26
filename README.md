@@ -11,6 +11,7 @@ website. Everything is processed locally on your device.
 - View and edit Safari cookies
 - Import and export Netscape `cookies.txt` and JSON files
 - View, add, edit, and delete Local Storage entries for the active website
+- Import, export, and copy Local Storage entries as JSON
 - No accounts, analytics, tracking, or external servers
 
 ## License

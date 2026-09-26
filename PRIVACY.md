@@ -1,6 +1,6 @@
 # CookieKit Privacy Policy
 
-Effective: August 11, 2026
+Effective: September 26, 2026
 
 CookieKit does not collect, store, sell, or transmit personal data.
 
@@ -24,11 +24,11 @@ developer-controlled server.
 
 When a user opens the **Local Storage** tab, CookieKit runs a script in the
 active webpage to read that page's origin-specific Local Storage. The popup
-displays the keys and values in memory. **Add entry**, **Edit**, and **Delete**
-write changes directly to that website's Local Storage. CookieKit does not keep
-a separate copy in app or extension storage or send values to a server. The
-script runs only when the user opens the tab or changes an entry; there is no
-background process on webpages.
+displays the keys and values in memory. **Add entry**, **Edit**, **Delete**, and
+**Import JSON** write changes directly to that website's Local Storage.
+CookieKit does not keep a separate copy in app or extension storage or send
+values to a server. The script runs only when the user opens the tab or changes
+an entry; there is no background process on webpages.
 
 ## Data collection and tracking
 
@@ -62,13 +62,20 @@ Safari to store valid cookies for the open website. The file is not uploaded or
 retained by CookieKit. The system file provider selected by the user may apply
 its own privacy terms.
 
+**Import JSON** on the Local Storage tab reads a user-selected array of string
+keys and values. Valid entries are written to the active site's Local Storage;
+matching keys are replaced, and other keys remain. The file is not uploaded or
+retained by CookieKit.
+
 ## User-selected exports
 
-Cookie data leaves CookieKit only when the user chooses one of these actions:
+Website data leaves CookieKit only when the user chooses one of these actions:
 
 - **Export cookies** passes an in-memory text or JSON file to the iOS or iPadOS
   system share sheet.
 - **Copy cookies** writes the selected format to the system clipboard.
+- **Export JSON** passes an in-memory Local Storage JSON file to the share sheet.
+- **Copy JSON** writes Local Storage entries to the system clipboard.
 
 The destination selected by the user, including another app, AirDrop recipient, or
 clipboard consumer, may store or process the exported data under its own privacy
@@ -77,15 +84,17 @@ terms. Those destinations are outside CookieKit's control.
 ## Website permissions
 
 Safari controls CookieKit's access to read and change website cookies and Local
-Storage. Users may
-allow, deny, or revoke website access in Safari's extension settings. CookieKit
-requests access only when the user invokes its Safari action.
+Storage. Users may allow, deny, or revoke website access in Safari's extension
+settings. CookieKit requests access only when the user invokes its Safari action.
 
 ## Security
 
 Cookies can grant access to signed-in accounts. Users should import cookies only
 from trusted sources, export them only when necessary, protect exported files,
 and share them only with trusted destinations.
+
+Local Storage may also contain account data. Import JSON only from trusted files
+and share exports only with trusted destinations.
 
 ## Policy changes
 
