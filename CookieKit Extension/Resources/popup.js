@@ -499,7 +499,7 @@ async function loadLocalStorage() {
         }
         storageTabId = tab.id;
         storageOrigin = pageURL.origin;
-        addStorageButton.disabled = false;
+        addStorageButton.disabled = storageBusy;
         renderStorageEntries(entries);
     } catch (error) {
         if (requestId === storageRequestId) {
@@ -515,6 +515,9 @@ async function changeLocalStorage(operation, key, value) {
     if (storageBusy || storageTabId === null || storageOrigin === null) {
         return;
     }
+    const tabId = storageTabId;
+    const origin = storageOrigin;
+    const requestId = storageRequestId;
     storageBusy = true;
     saveStorageButton.disabled = true;
     cancelStorageButton.disabled = true;
@@ -523,21 +526,33 @@ async function changeLocalStorage(operation, key, value) {
 
     try {
         const [tab] = await browser.tabs.query({active: true, currentWindow: true});
-        if (tab?.id !== storageTabId || new URL(tab.url).origin !== storageOrigin) {
+        if (tab?.id !== tabId || new URL(tab.url).origin !== origin) {
             throw new Error("The active page changed");
         }
-        const entries = await executeStorageOperation(storageTabId, storageOrigin, operation, key, value);
-        renderStorageEntries(entries);
-        closeStorageEditor();
-        setStorageNotice(operation === "remove" ? "storage_deleted" : "storage_saved", "success");
+        const entries = await executeStorageOperation(tabId, origin, operation, key, value);
+        if (requestId === storageRequestId) {
+            renderStorageEntries(entries);
+            closeStorageEditor();
+            setStorageNotice(operation === "remove" ? "storage_deleted" : "storage_saved", "success");
+        }
     } catch (error) {
-        setStorageNotice(error?.message?.includes("already uses")
-            ? "storage_duplicate" : "storage_write_failed");
+        if (requestId === storageRequestId) {
+            setStorageNotice(error?.message?.includes("already uses")
+                ? "storage_duplicate" : "storage_write_failed");
+        }
     } finally {
         storageBusy = false;
         saveStorageButton.disabled = false;
         cancelStorageButton.disabled = false;
         addStorageButton.disabled = storageOrigin === null;
+        if (
+            requestId !== storageRequestId
+            && localStorageTab.getAttribute("aria-selected") === "true"
+            && storageTabId === tabId
+            && storageOrigin === origin
+        ) {
+            loadLocalStorage();
+        }
     }
 }
 
