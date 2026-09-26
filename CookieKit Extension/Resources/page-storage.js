@@ -4,8 +4,24 @@ export function runStorageOperation(operation, expectedOrigin, key, value) {
     }
 
     const storage = window.localStorage;
+    let importedCount = 0;
+    let skippedCount = 0;
 
-    if (operation === "set" || operation === "add") {
+    if (operation === "import") {
+        if (!Array.isArray(key) || !key.every((entry) =>
+            entry && typeof entry.key === "string" && typeof entry.value === "string"
+        )) {
+            throw new TypeError("Local storage import requires key and value strings");
+        }
+        for (const entry of key) {
+            try {
+                storage.setItem(entry.key, entry.value);
+                importedCount += 1;
+            } catch {
+                skippedCount += 1;
+            }
+        }
+    } else if (operation === "set" || operation === "add") {
         if (typeof key !== "string" || typeof value !== "string") {
             throw new TypeError("A storage key and value must be strings");
         }
@@ -31,5 +47,5 @@ export function runStorageOperation(operation, expectedOrigin, key, value) {
     }
 
     entries.sort((first, second) => first.key < second.key ? -1 : first.key > second.key ? 1 : 0);
-    return {origin: location.origin, entries};
+    return {origin: location.origin, entries, importedCount, skippedCount};
 }

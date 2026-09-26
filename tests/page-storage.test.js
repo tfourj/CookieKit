@@ -30,8 +30,35 @@ test("lists local storage in key order and preserves text values", () => {
     withStorage(() => {
         assert.deepEqual(runStorageOperation("list", "https://example.com"), {
             origin: "https://example.com",
-            entries: [{key: "a", value: "first"}, {key: "z", value: "last"}]
+            entries: [{key: "a", value: "first"}, {key: "z", value: "last"}],
+            importedCount: 0,
+            skippedCount: 0
         });
+    });
+});
+
+test("imports entries into the active origin and reports rejected writes", () => {
+    withStorage((values) => {
+        const storage = globalThis.window.localStorage;
+        const setItem = storage.setItem;
+        storage.setItem = (key, value) => {
+            if (key === "blocked") {
+                throw new Error("Quota exceeded");
+            }
+            setItem(key, value);
+        };
+
+        const result = runStorageOperation("import", "https://example.com", [
+            {key: "a", value: "replaced"},
+            {key: "new", value: "added"},
+            {key: "blocked", value: "ignored"}
+        ]);
+        assert.equal(result.importedCount, 2);
+        assert.equal(result.skippedCount, 1);
+        assert.equal(values.get("a"), "replaced");
+        assert.equal(values.get("new"), "added");
+        assert.equal(values.get("z"), "last");
+        assert.equal(values.has("blocked"), false);
     });
 });
 
@@ -51,6 +78,8 @@ test("rejects a changed page and invalid operations before writing", () => {
         assert.throws(() => runStorageOperation("set", "https://other.test", "a", "wrong"), /page changed/);
         assert.throws(() => runStorageOperation("remove", "https://example.com", 42), /string/);
         assert.throws(() => runStorageOperation("clear", "https://example.com"), /Unsupported/);
+        assert.throws(() => runStorageOperation("import", "https://other.test", []), /page changed/);
+        assert.throws(() => runStorageOperation("import", "https://example.com", [{key: "bad"}]), /strings/);
         assert.equal(values.get("a"), "first");
         assert.throws(() => runStorageOperation("add", "https://example.com", "a", "wrong"), /already uses/);
     });
