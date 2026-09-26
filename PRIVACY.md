@@ -20,7 +20,15 @@ its other supported attributes. CookieKit does not persist cookies or import
 files in app storage, extension storage, logs, analytics, or a
 developer-controlled server.
 
-CookieKit does not run a content script or background process on webpages.
+## Local Storage processing
+
+When a user opens the **Local Storage** tab, CookieKit runs a script in the
+active webpage to read that page's origin-specific Local Storage. The popup
+displays the keys and values in memory. **Add entry**, **Edit**, and **Delete**
+write changes directly to that website's Local Storage. CookieKit does not keep
+a separate copy in app or extension storage or send values to a server. The
+script runs only when the user opens the tab or changes an entry; there is no
+background process on webpages.
 
 ## Data collection and tracking
 
@@ -42,6 +50,9 @@ popup. Selecting **Edit** copies one cookie's name and value into a local form.
 The table is hidden by default, is not transmitted anywhere, and is discarded
 when the popup closes. Anyone who can see the screen or a screenshot may be able
 to read the displayed values.
+
+The **Local Storage** tab displays that site's keys and values in the popup.
+Those values may also contain account information and can be seen in screenshots.
 
 ## User-selected imports
 
@@ -65,7 +76,8 @@ terms. Those destinations are outside CookieKit's control.
 
 ## Website permissions
 
-Safari controls CookieKit's access to read and change website cookies. Users may
+Safari controls CookieKit's access to read and change website cookies and Local
+Storage. Users may
 allow, deny, or revoke website access in Safari's extension settings. CookieKit
 requests access only when the user invokes its Safari action.
 
